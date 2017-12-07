@@ -49,6 +49,9 @@ libraryDependencies ++= {
     "com.typesafe.play" %% "play-mailer-guice" % "6.0.1",
     "com.enragedginger" %% "akka-quartz-scheduler" % "1.6.1-akka-2.5.x",
 
+    // swagger depdencies
+    "io.swagger" %% "swagger-play2" % "1.6.1-SNAPSHOT",
+
     //"org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test,
     "com.typesafe.play" %% "play-specs2" % "2.6.7" % Test,
     "org.specs2" %% "specs2" % "2.5" % Test
