@@ -2,21 +2,16 @@ package controllers
 
 import javax.inject.Inject
 
-import com.mohiva.play.silhouette.api.actions.SecuredRequest
-import entities.CoffeeBeanEntity.CoffeeBean
 import play.api.libs.json.{ JsObject, Json }
-
-//import com.mohiva.play.silhouette.api.actions.SecuredRequest
 import com.mohiva.play.silhouette.api.Silhouette
 import models.CoffeeBeans
+import entities.CoffeeBean
 import io.swagger.annotations.{ ApiParam, ApiResponse, ApiResponses }
 import org.webjars.play.WebJarsUtil
 import play.api.i18n.I18nSupport
-import play.api.mvc.{ AbstractController, AnyContent, ControllerComponents, Request }
+import play.api.mvc.{ AbstractController, ControllerComponents }
 import play.filters.csrf.CSRFAddToken
 import utils.auth.DefaultEnv
-
-import scala.concurrent.Future
 
 /**
  * The basic application controller.
