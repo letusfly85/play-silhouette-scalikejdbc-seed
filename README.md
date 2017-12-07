@@ -13,7 +13,7 @@ docker run --name example \
 
 ```sql
 CREATE TABLE users (
-    id int AUTO_INCREMENT,
+    id INT AUTO_INCREMENT,
     user_id VARCHAR(300) NOT NULL UNIQUE,
     role VARCHAR(300) NOT NULL DEFAULT 'normal',
     hasher VARCHAR(300) NOT NULL,
@@ -26,5 +26,13 @@ CREATE TABLE users (
     activated BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (id),
     UNIQUE KEY pk_user_id (user_id)
+);
+
+
+CREATE TABLE coffee_beans (
+    id INT AUTO_INCREMENT,
+    name VARCHAR(300),
+    kind VARCHAR(300),
+    PRIMARY KEY (id)
 );
 ```
