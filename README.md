@@ -35,4 +35,13 @@ CREATE TABLE coffee_beans (
     kind VARCHAR(300),
     PRIMARY KEY (id)
 );
+
+CREATE TABLE coffee_shops (
+    id INT AUTO_INCREMENT,
+    name VARCHAR(300),
+    email VARCHAR(300),
+    owner_name VARCHAR(300),
+    address VARCHAR(300),
+    PRIMARY KEY (id)
+);
 ```
