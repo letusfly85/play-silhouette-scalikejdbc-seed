@@ -6,7 +6,7 @@ import play.api.libs.json.{ JsObject, Json }
 import com.mohiva.play.silhouette.api.Silhouette
 import models.CoffeeBeans
 import entities.CoffeeBean
-import io.swagger.annotations.{ ApiParam, ApiResponse, ApiResponses }
+import io.swagger.annotations.{ Api, ApiParam, ApiResponse, ApiResponses }
 import org.webjars.play.WebJarsUtil
 import play.api.i18n.I18nSupport
 import play.api.mvc.{ AbstractController, ControllerComponents }
@@ -21,6 +21,7 @@ import utils.auth.DefaultEnv
  * @param webJarsUtil The webjar util.
  * @param assets      The Play assets finder.
  */
+@Api
 class CoffeeBeanController @Inject() (
     components: ControllerComponents,
     silhouette: Silhouette[DefaultEnv],

@@ -4,7 +4,7 @@ import javax.inject.Inject
 
 import com.mohiva.play.silhouette.api.Silhouette
 import entities.CoffeeShop
-import io.swagger.annotations.{ ApiParam, ApiResponse, ApiResponses }
+import io.swagger.annotations.{ Api, ApiParam, ApiResponse, ApiResponses }
 import models.CoffeeShops
 import org.webjars.play.WebJarsUtil
 import play.api.i18n.I18nSupport
@@ -21,6 +21,7 @@ import utils.auth.DefaultEnv
  * @param webJarsUtil The webjar util.
  * @param assets      The Play assets finder.
  */
+@Api
 class CoffeeShopController @Inject() (
     components: ControllerComponents,
     silhouette: Silhouette[DefaultEnv],
