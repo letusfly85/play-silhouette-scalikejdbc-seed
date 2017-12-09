@@ -5,15 +5,15 @@ import org.specs2.mutable._
 import scalikejdbc._
 import scalikejdbc.config.DBs
 
-trait AutoRollbackWithFixture extends AutoRollback {
-  override def fixture(implicit session: DBSession) {
-    SQL("insert into coffee_beans values (?, ?, ?)").bind(123, "Guatemala", "Latin America").update.apply()
-    SQL("insert into coffee_beans values (?, ?, ?)").bind(234, "Ethiopia", "Africa").update.apply()
-  }
-}
-
 class CoffeeBeansSpec extends Specification {
   DBs.setupAll()
+
+  trait AutoRollbackWithFixture extends AutoRollback {
+    override def fixture(implicit session: DBSession) {
+      SQL("insert into coffee_beans values (?, ?, ?)").bind(123, "Guatemala", "Latin America").update.apply()
+      SQL("insert into coffee_beans values (?, ?, ?)").bind(234, "Ethiopia", "Africa").update.apply()
+    }
+  }
 
   "CoffeeBeans" should {
 
