@@ -35,7 +35,20 @@ class CoffeeShopController @Inject() (
   @ApiResponses(Array(
     new ApiResponse(code = 400, message = "Invalid ID supplied"),
     new ApiResponse(code = 404, message = "Coffee Bean not found")))
-  def find(@ApiParam(value = "ID of the Coffee Bean to fetch") id: String) =
+  def list() =
+    silhouette.UnsecuredAction {
+      Ok(Json.toJson(CoffeeShops.findAll.map { coffeeShops =>
+        CoffeeShop(
+          coffeeShops.id, coffeeShops.name, coffeeShops.email,
+          coffeeShops.ownerName, coffeeShops.address
+        )
+      }))
+    }
+
+  @ApiResponses(Array(
+    new ApiResponse(code = 400, message = "Invalid ID supplied"),
+    new ApiResponse(code = 404, message = "Coffee Shop not found")))
+  def find(@ApiParam(value = "ID of the Coffee Shop to fetch") id: String) =
     silhouette.UnsecuredAction {
       CoffeeShops.find(id.toInt) match {
         case Some(coffeeShops) =>
