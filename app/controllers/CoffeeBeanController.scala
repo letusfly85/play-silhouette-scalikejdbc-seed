@@ -42,7 +42,6 @@ class CoffeeBeanController @Inject() (
           Ok(Json.toJson(CoffeeBean(coffeeBeans.id, coffeeBeans.name, coffeeBeans.kind)))
 
         case _ =>
-          //NotFound(new ApiResponse(404, "Coffee Bean not found"), 404)
           NotFound(JsObject.empty)
       }
     }

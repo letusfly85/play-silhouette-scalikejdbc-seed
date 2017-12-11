@@ -46,7 +46,6 @@ class CoffeeShopController @Inject() (
           ))
 
         case _ =>
-          //NotFound(new ApiResponse(404, "Coffee Bean not found"), 404)
           NotFound(JsObject.empty)
       }
     }
