@@ -36,7 +36,7 @@ class ApplicationController @Inject() (
    *
    * @return The result to display.
    */
-  def index = addToken(silhouette.UnsecuredAction.async { implicit request: Request[AnyContent] =>
+  def index = addToken(silhouette.SecuredAction.async { implicit request: Request[AnyContent] =>
     Future.successful(Ok(JsObject.empty))
   })
 
