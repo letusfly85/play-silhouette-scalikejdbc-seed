@@ -33,6 +33,7 @@ CREATE TABLE coffee_beans (
     id INT AUTO_INCREMENT,
     name VARCHAR(300),
     kind VARCHAR(300),
+    coffee_shop_id INT,
     PRIMARY KEY (id)
 );
 

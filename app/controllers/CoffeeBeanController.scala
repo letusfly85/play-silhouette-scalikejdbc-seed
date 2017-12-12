@@ -39,7 +39,9 @@ class CoffeeBeanController @Inject() (
     silhouette.UnsecuredAction {
       CoffeeBeans.find(id.toInt) match {
         case Some(coffeeBeans) =>
-          Ok(Json.toJson(CoffeeBean(coffeeBeans.id, coffeeBeans.name, coffeeBeans.kind)))
+          Ok(Json.toJson(
+            CoffeeBean(coffeeBeans.id, coffeeBeans.name, coffeeBeans.kind, coffeeBeans.coffeeShopId)
+          ))
 
         case _ =>
           NotFound(JsObject.empty)
