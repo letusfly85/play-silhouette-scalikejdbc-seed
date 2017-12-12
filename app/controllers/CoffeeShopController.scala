@@ -13,6 +13,8 @@ import play.api.mvc.{ AbstractController, ControllerComponents }
 import play.filters.csrf.CSRFAddToken
 import utils.auth.DefaultEnv
 
+import scala.concurrent.Future
+
 /**
  * The basic application controller.
  *
@@ -36,14 +38,14 @@ class CoffeeShopController @Inject() (
     new ApiResponse(code = 400, message = "Invalid ID supplied"),
     new ApiResponse(code = 404, message = "Coffee Bean not found")))
   def list() =
-    silhouette.UnsecuredAction {
-      Ok(Json.toJson(CoffeeShops.findAll.map { coffeeShops =>
+    addToken(silhouette.SecuredAction.async { implicit request =>
+      Future.successful(Ok(Json.toJson(CoffeeShops.findAll.map { coffeeShops =>
         CoffeeShop(
           coffeeShops.id, coffeeShops.name, coffeeShops.email,
           coffeeShops.ownerName, coffeeShops.address
         )
-      }))
-    }
+      })))
+    })
 
   @ApiResponses(Array(
     new ApiResponse(code = 400, message = "Invalid ID supplied"),

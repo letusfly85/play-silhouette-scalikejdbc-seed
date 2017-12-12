@@ -3,17 +3,16 @@ package models
 import scalikejdbc._
 
 case class CoffeeBeans(
-  id: Int,
-  name: Option[String] = None,
-  kind: Option[String] = None,
-  coffeeShopId: Option[Int] = None) {
+    id: Int,
+    name: Option[String] = None,
+    kind: Option[String] = None,
+    coffeeShopId: Option[Int] = None) {
 
   def save()(implicit session: DBSession = CoffeeBeans.autoSession): CoffeeBeans = CoffeeBeans.save(this)(session)
 
   def destroy()(implicit session: DBSession = CoffeeBeans.autoSession): Int = CoffeeBeans.destroy(this)(session)
 
 }
-
 
 object CoffeeBeans extends SQLSyntaxSupport[CoffeeBeans] {
 

@@ -36,7 +36,7 @@ class CoffeeBeanController @Inject() (
     new ApiResponse(code = 400, message = "Invalid ID supplied"),
     new ApiResponse(code = 404, message = "Coffee Bean not found")))
   def find(@ApiParam(value = "ID of the Coffee Bean to fetch") id: String) =
-    silhouette.UnsecuredAction {
+    silhouette.SecuredAction { implicit request =>
       CoffeeBeans.find(id.toInt) match {
         case Some(coffeeBeans) =>
           Ok(Json.toJson(
