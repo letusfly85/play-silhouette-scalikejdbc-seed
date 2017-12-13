@@ -1,6 +1,6 @@
 CREATE TABLE users (
     id INT AUTO_INCREMENT,
-    user_id VARCHAR(300) NOT NULL UNIQUE,
+    user_id VARCHAR(128) NOT NULL UNIQUE,
     role VARCHAR(300) NOT NULL DEFAULT 'normal',
     hasher VARCHAR(300) NOT NULL,
     salt VARCHAR(300),
