@@ -19,7 +19,7 @@ before_script:
   - cp conf/application.test.conf conf/application.conf
 
 script:
-  - sbt test
+  - sbt coverage test
   - find $HOME/.sbt -name "*.lock" | xargs rm
   - find $HOME/.ivy2 -name "ivydata-*.properties" | xargs rm
 
