@@ -10,8 +10,8 @@ class CoffeeBeansSpec extends Specification {
 
   trait AutoRollbackWithFixture extends AutoRollback {
     override def fixture(implicit session: DBSession) {
-      SQL("insert into coffee_beans values (?, ?, ?)").bind(123, "Guatemala", "Latin America").update.apply()
-      SQL("insert into coffee_beans values (?, ?, ?)").bind(234, "Ethiopia", "Africa").update.apply()
+      SQL("insert into coffee_beans values (?, ?, ?, ?)").bind(123, "Guatemala", "Latin America", 1).update.apply()
+      SQL("insert into coffee_beans values (?, ?, ?, ?)").bind(234, "Ethiopia", "Africa", 1).update.apply()
     }
   }
 
