@@ -5,12 +5,12 @@ import javax.inject.Inject
 import com.mohiva.play.silhouette.api.Silhouette
 import models.CoffeeBeans
 import entities.CoffeeBean
-import io.swagger.annotations.{ Api, ApiParam, ApiResponse, ApiResponses }
+import io.swagger.annotations.{Api, ApiParam, ApiResponse, ApiResponses}
 import org.webjars.play.WebJarsUtil
 import play.api.i18n.I18nSupport
-import play.api.mvc.{ AbstractController, ControllerComponents }
-import play.filters.csrf.CSRFAddToken
-import play.api.libs.json.{ JsFalse, JsObject, JsSuccess, Json }
+import play.api.mvc.{AbstractController, ControllerComponents}
+import play.filters.csrf.{CSRFAddToken, CSRFCheck}
+import play.api.libs.json.{JsFalse, JsObject, JsSuccess, Json}
 import utils.auth.DefaultEnv
 import scalikejdbc._
 
@@ -28,7 +28,8 @@ import scala.concurrent.Future
 class CoffeeBeanController @Inject() (
     components: ControllerComponents,
     silhouette: Silhouette[DefaultEnv],
-    addToken: CSRFAddToken
+    addToken: CSRFAddToken,
+    checkToken: CSRFCheck,
 )(
     implicit
     webJarsUtil: WebJarsUtil,
@@ -71,7 +72,7 @@ class CoffeeBeanController @Inject() (
 
   @ApiResponses(Array())
   def update =
-    silhouette.UnsecuredAction.async { implicit request =>
+    checkToken(silhouette.SecuredAction.async { implicit request =>
       request.body.asJson match {
         case Some(json) =>
           Json.fromJson[CoffeeBean](json) match {
@@ -88,8 +89,9 @@ class CoffeeBeanController @Inject() (
 
               Future.successful(Ok(Json.toJson(coffeeBeans)))
 
-            case _ =>
+            case e =>
               //TODO
+              println(e.toString)
               Future.successful(Ok(JsObject.empty))
           }
 
@@ -97,5 +99,5 @@ class CoffeeBeanController @Inject() (
           //TODO
           Future.successful(Ok(JsObject.empty))
       }
-    }
+    })
 }
