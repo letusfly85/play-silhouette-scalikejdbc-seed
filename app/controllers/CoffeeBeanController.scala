@@ -12,6 +12,7 @@ import play.api.mvc.{ AbstractController, ControllerComponents }
 import play.filters.csrf.CSRFAddToken
 import play.api.libs.json.{ JsFalse, JsObject, JsSuccess, Json }
 import utils.auth.DefaultEnv
+import scalikejdbc._
 
 import scala.concurrent.Future
 
@@ -33,6 +34,24 @@ class CoffeeBeanController @Inject() (
     webJarsUtil: WebJarsUtil,
     assets: AssetsFinder
 ) extends AbstractController(components) with I18nSupport {
+
+  @ApiResponses(Array(
+    new ApiResponse(code = 400, message = "Invalid ID supplied"),
+    new ApiResponse(code = 404, message = "Coffee Bean not found")))
+  def list() =
+    addToken(silhouette.SecuredAction.async { implicit request =>
+      val coffeeShopId = request.queryString.get("coffee-shop-id").headOption match {
+        case Some(values) => values.head
+        case None         => ""
+      }
+
+      Future.successful(Ok(Json.toJson(
+        CoffeeBeans.findAllBy(sqls.eq(CoffeeBeans.column.coffeeShopId, coffeeShopId)).map { coffeeBeans =>
+          CoffeeBean(
+            coffeeBeans.id, coffeeBeans.name, coffeeBeans.kind, coffeeBeans.coffeeShopId
+          )
+        })))
+    })
 
   @ApiResponses(Array(
     new ApiResponse(code = 400, message = "Invalid ID supplied"),
