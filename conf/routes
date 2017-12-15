@@ -33,8 +33,8 @@ GET         /swagger.json                    controllers.ApiHelpController.getRe
 
 GET         /api/coffee-beans/:id            controllers.CoffeeBeanController.find(id)
 
+POST        /api/coffee-beans                controllers.CoffeeBeanController.update
+
 GET         /api/coffee-shops                controllers.CoffeeShopController.list
 
 GET         /api/coffee-shops/:id            controllers.CoffeeShopController.find(id)
-
-

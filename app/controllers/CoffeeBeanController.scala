@@ -2,7 +2,6 @@ package controllers
 
 import javax.inject.Inject
 
-import play.api.libs.json.{ JsObject, Json }
 import com.mohiva.play.silhouette.api.Silhouette
 import models.CoffeeBeans
 import entities.CoffeeBean
@@ -11,7 +10,10 @@ import org.webjars.play.WebJarsUtil
 import play.api.i18n.I18nSupport
 import play.api.mvc.{ AbstractController, ControllerComponents }
 import play.filters.csrf.CSRFAddToken
+import play.api.libs.json.{ JsFalse, JsObject, JsSuccess, Json }
 import utils.auth.DefaultEnv
+
+import scala.concurrent.Future
 
 /**
  * The basic application controller.
@@ -48,4 +50,33 @@ class CoffeeBeanController @Inject() (
       }
     }
 
+  @ApiResponses(Array())
+  def update =
+    silhouette.UnsecuredAction.async { implicit request =>
+      request.body.asJson match {
+        case Some(json) =>
+          Json.fromJson[CoffeeBean](json) match {
+            case JsSuccess(coffeeBeans, _) =>
+              CoffeeBeans.find(coffeeBeans.id) match {
+                case Some(beans) =>
+                  beans.copy(
+                    name = coffeeBeans.name, kind = coffeeBeans.kind, coffeeShopId = coffeeBeans.coffeeShopId
+                  ).save()
+
+                case None =>
+                  Future.successful(Ok(Json.toJson(coffeeBeans)))
+              }
+
+              Future.successful(Ok(Json.toJson(coffeeBeans)))
+
+            case _ =>
+              //TODO
+              Future.successful(Ok(JsObject.empty))
+          }
+
+        case None =>
+          //TODO
+          Future.successful(Ok(JsObject.empty))
+      }
+    }
 }
