@@ -37,6 +37,8 @@ GET         /api/coffee-beans/:id            controllers.CoffeeBeanController.fi
 
 POST        /api/coffee-beans                controllers.CoffeeBeanController.update
 
+POST        /api/coffee-beans                controllers.CoffeeBeanController.create
+
 GET         /api/coffee-shops                controllers.CoffeeShopController.list
 
 GET         /api/coffee-shops/:id            controllers.CoffeeShopController.find(id)

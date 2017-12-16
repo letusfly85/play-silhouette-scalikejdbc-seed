@@ -100,4 +100,31 @@ class CoffeeBeanController @Inject() (
           Future.successful(Ok(JsObject.empty))
       }
     })
+
+  @ApiResponses(Array())
+  def create =
+    checkToken(silhouette.SecuredAction.async { implicit request =>
+      request.body.asJson match {
+        case Some(json) =>
+          Json.fromJson[CoffeeBean](json) match {
+            case JsSuccess(coffeeBeans, _) =>
+              CoffeeBeans.create(
+                name = coffeeBeans.name,
+                kind = coffeeBeans.kind,
+                coffeeShopId = coffeeBeans.coffeeShopId
+              ).save()
+
+              Future.successful(Ok(Json.toJson(coffeeBeans)))
+
+            case e =>
+              //TODO
+              println(e.toString)
+              Future.successful(Ok(JsObject.empty))
+          }
+
+        case None =>
+          //TODO
+          Future.successful(Ok(JsObject.empty))
+      }
+    })
 }
