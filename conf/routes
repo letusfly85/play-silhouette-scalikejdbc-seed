@@ -31,6 +31,8 @@ GET         /assets/*file                    controllers.Assets.versioned(file)
 
 GET         /swagger.json                    controllers.ApiHelpController.getResources
 
+PUT         /api/users                       controllers.AdministratorController.update
+
 GET         /api/coffee-beans                controllers.CoffeeBeanController.list
 
 GET         /api/coffee-beans/:id            controllers.CoffeeBeanController.find(id)

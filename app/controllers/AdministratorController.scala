@@ -4,9 +4,12 @@ import javax.inject.Inject
 
 import com.mohiva.play.silhouette.api.actions.SecuredRequest
 import com.mohiva.play.silhouette.api.{ LogoutEvent, Silhouette }
+import io.swagger.annotations.ApiResponses
 import org.webjars.play.WebJarsUtil
 import play.api.i18n.I18nSupport
+import play.api.libs.json.JsObject
 import play.api.mvc.{ AbstractController, AnyContent, ControllerComponents }
+import play.filters.csrf.CSRFCheck
 import utils.auth.{ DefaultEnv, WithCredentialsProvider }
 
 import scala.concurrent.Future
@@ -21,7 +24,8 @@ import scala.concurrent.Future
  */
 class AdministratorController @Inject() (
     components: ControllerComponents,
-    silhouette: Silhouette[DefaultEnv]
+    silhouette: Silhouette[DefaultEnv],
+    checkToken: CSRFCheck
 )(
     implicit
     webJarsUtil: WebJarsUtil,
@@ -47,4 +51,11 @@ class AdministratorController @Inject() (
     silhouette.env.eventBus.publish(LogoutEvent(request.identity, request))
     silhouette.env.authenticatorService.discard(request.authenticator, result)
   }
+
+  //TODO
+  @ApiResponses(Array())
+  def update =
+    checkToken(silhouette.SecuredAction.async { implicit request =>
+      Future.successful(Ok(JsObject.empty))
+    })
 }
