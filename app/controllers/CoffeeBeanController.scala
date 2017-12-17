@@ -10,7 +10,7 @@ import org.webjars.play.WebJarsUtil
 import play.api.i18n.I18nSupport
 import play.api.mvc.{AbstractController, ControllerComponents}
 import play.filters.csrf.{CSRFAddToken, CSRFCheck}
-import play.api.libs.json.{JsFalse, JsObject, JsSuccess, Json}
+import play.api.libs.json.{JsObject, JsSuccess, Json}
 import utils.auth.DefaultEnv
 import scalikejdbc._
 
@@ -115,6 +115,34 @@ class CoffeeBeanController @Inject() (
               ).save()
 
               Future.successful(Ok(Json.toJson(coffeeBeans)))
+
+            case e =>
+              //TODO
+              println(e.toString)
+              Future.successful(Ok(JsObject.empty))
+          }
+
+        case None =>
+          //TODO
+          Future.successful(Ok(JsObject.empty))
+      }
+    })
+
+  @ApiResponses(Array())
+  def destroy =
+    checkToken(silhouette.SecuredAction.async { implicit request =>
+      request.body.asJson match {
+        case Some(json) =>
+          Json.fromJson[CoffeeBean](json) match {
+            case JsSuccess(coffeeBeans, _) =>
+              CoffeeBeans.find(coffeeBeans.id) match {
+                case Some(beans) =>
+                  beans.destroy()
+                  Future.successful(Ok(JsObject.empty))
+
+                case None =>
+                  Future.successful(NotFound(Json.toJson(coffeeBeans)))
+              }
 
             case e =>
               //TODO
