@@ -41,7 +41,7 @@ PUT         /api/coffee-beans                controllers.CoffeeBeanController.up
 
 POST        /api/coffee-beans                controllers.CoffeeBeanController.create
 
-DELETE      /api/coffee-beans                controllers.CoffeeBeanController.destroy
+DELETE      /api/coffee-beans/:id            controllers.CoffeeBeanController.destroy(id)
 
 GET         /api/coffee-shops                controllers.CoffeeShopController.list
 

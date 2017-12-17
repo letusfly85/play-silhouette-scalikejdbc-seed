@@ -129,30 +129,15 @@ class CoffeeBeanController @Inject() (
     })
 
   @ApiResponses(Array())
-  def destroy =
+  def destroy(@ApiParam(value = "ID of the Coffee Bean to fetch") id: String) =
     checkToken(silhouette.SecuredAction.async { implicit request =>
-      request.body.asJson match {
-        case Some(json) =>
-          Json.fromJson[CoffeeBean](json) match {
-            case JsSuccess(coffeeBeans, _) =>
-              CoffeeBeans.find(coffeeBeans.id) match {
-                case Some(beans) =>
-                  beans.destroy()
-                  Future.successful(Ok(JsObject.empty))
-
-                case None =>
-                  Future.successful(NotFound(Json.toJson(coffeeBeans)))
-              }
-
-            case e =>
-              //TODO
-              println(e.toString)
-              Future.successful(Ok(JsObject.empty))
-          }
+      CoffeeBeans.find(id.toInt) match {
+        case Some(beans) =>
+          beans.destroy()
+          Future.successful(Ok(JsObject.empty))
 
         case None =>
-          //TODO
-          Future.successful(Ok(JsObject.empty))
+          Future.successful(NotFound(Json.toJson(id)))
       }
     })
 }
