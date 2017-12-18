@@ -15,6 +15,13 @@ CREATE TABLE users (
 );
 
 
+CREATE TABLE coffee_kinds (
+    id INT AUTO_INCREMENT,
+    name VARCHAR(300),
+    description VARCHAR(2000),
+    PRIMARY KEY (id)
+);
+
 CREATE TABLE coffee_beans (
     id INT AUTO_INCREMENT,
     name VARCHAR(300),
