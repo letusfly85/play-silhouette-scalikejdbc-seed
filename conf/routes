@@ -33,6 +33,8 @@ GET         /swagger.json                    controllers.ApiHelpController.getRe
 
 PUT         /api/users                       controllers.AdministratorController.update
 
+GET         /api/coffee-kinds                controllers.CoffeeKindController.list
+
 GET         /api/coffee-beans                controllers.CoffeeBeanController.list
 
 GET         /api/coffee-beans/:id            controllers.CoffeeBeanController.find(id)
