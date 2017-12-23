@@ -54,10 +54,9 @@ class AdministratorController @Inject() (
     silhouette.env.authenticatorService.discard(request.authenticator, result)
   }
 
-  //TODO
   @ApiResponses(Array())
   def update =
-    checkToken(silhouette.SecuredAction.async { implicit request =>
+    checkToken(silhouette.SecuredAction(WithCredentialsProvider("credentials")).async { implicit request =>
       request.body.asJson match {
         case Some(json) =>
           Json.fromJson[UserRole](json) match {
