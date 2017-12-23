@@ -3,14 +3,16 @@ package controllers
 import javax.inject.Inject
 
 import com.mohiva.play.silhouette.api.actions.SecuredRequest
-import com.mohiva.play.silhouette.api.{ LogoutEvent, Silhouette }
+import com.mohiva.play.silhouette.api.{LogoutEvent, Silhouette}
+import entities.UserRole
 import io.swagger.annotations.ApiResponses
+import models.Users
 import org.webjars.play.WebJarsUtil
 import play.api.i18n.I18nSupport
-import play.api.libs.json.JsObject
-import play.api.mvc.{ AbstractController, AnyContent, ControllerComponents }
+import play.api.libs.json.{JsObject, JsSuccess, Json}
+import play.api.mvc.{AbstractController, AnyContent, ControllerComponents}
 import play.filters.csrf.CSRFCheck
-import utils.auth.{ DefaultEnv, WithCredentialsProvider }
+import utils.auth.{DefaultEnv, WithCredentialsProvider}
 
 import scala.concurrent.Future
 
@@ -56,6 +58,32 @@ class AdministratorController @Inject() (
   @ApiResponses(Array())
   def update =
     checkToken(silhouette.SecuredAction.async { implicit request =>
+      request.body.asJson match {
+        case Some(json) =>
+          Json.fromJson[UserRole](json) match {
+            case JsSuccess(userRole, _) =>
+              Users.find(userRole.id) match {
+                case Some(users) =>
+                  users.copy(
+                    role = userRole.role
+                  ).save()
+
+                case None =>
+                  Future.successful(Ok(Json.toJson(userRole)))
+              }
+
+              Future.successful(Ok(Json.toJson(userRole)))
+
+            case e =>
+              //TODO
+              println(e.toString)
+              Future.successful(Ok(JsObject.empty))
+          }
+
+        case None =>
+          //TODO
+          Future.successful(Ok(JsObject.empty))
+      }
       Future.successful(Ok(JsObject.empty))
     })
 }

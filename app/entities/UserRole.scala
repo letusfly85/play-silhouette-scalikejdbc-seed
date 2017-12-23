@@ -4,16 +4,16 @@ import play.api.libs.json._
 import play.api.libs.json.Reads._
 import play.api.libs.functional.syntax._
 
-case class UserRole(id: Int, role: Option[String])
+case class UserRole(id: Int, role: String)
 
 object UserRole {
   implicit def userEntityReads: Reads[UserRole] = (
     (JsPath \ "id").read[Int] and
-    (JsPath \ "role").readNullable[String]
+    (JsPath \ "role").read[String]
   )(UserRole.apply _)
 
   implicit def userEntityWrites: Writes[UserRole] = (
     (JsPath \ "id").write[Int] and
-    (JsPath \ "role").writeNullable[String]
+    (JsPath \ "role").write[String]
   )(unlift(UserRole.unapply))
 }
