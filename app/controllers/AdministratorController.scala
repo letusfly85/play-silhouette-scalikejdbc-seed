@@ -4,14 +4,14 @@ import javax.inject.Inject
 
 import com.mohiva.play.silhouette.api.actions.SecuredRequest
 import com.mohiva.play.silhouette.api.{LogoutEvent, Silhouette}
-import entities.UserRole
-import io.swagger.annotations.ApiResponses
+import entities.{User, UserRole}
+import io.swagger.annotations.{ApiResponse, ApiResponses}
 import models.Users
 import org.webjars.play.WebJarsUtil
 import play.api.i18n.I18nSupport
 import play.api.libs.json.{JsObject, JsSuccess, Json}
 import play.api.mvc.{AbstractController, AnyContent, ControllerComponents}
-import play.filters.csrf.CSRFCheck
+import play.filters.csrf.{CSRFAddToken, CSRFCheck}
 import utils.auth.{DefaultEnv, WithCredentialsProvider}
 
 import scala.concurrent.Future
@@ -27,7 +27,8 @@ import scala.concurrent.Future
 class AdministratorController @Inject() (
     components: ControllerComponents,
     silhouette: Silhouette[DefaultEnv],
-    checkToken: CSRFCheck
+    checkToken: CSRFCheck,
+    addToken: CSRFAddToken
 )(
     implicit
     webJarsUtil: WebJarsUtil,
@@ -54,9 +55,21 @@ class AdministratorController @Inject() (
     silhouette.env.authenticatorService.discard(request.authenticator, result)
   }
 
+  @ApiResponses(Array(
+    new ApiResponse(code = 400, message = "Invalid ID supplied"),
+    new ApiResponse(code = 404, message = "Coffee Bean not found")))
+  def list() =
+    addToken(silhouette.SecuredAction.async { implicit request =>
+      Future.successful(Ok(Json.toJson(Users.findAll.map { users  =>
+        User(
+          users.id, users.email, users.role
+        )
+      })))
+    })
+
   @ApiResponses(Array())
   def update =
-    checkToken(silhouette.SecuredAction(WithCredentialsProvider("credentials")).async { implicit request =>
+    addToken(silhouette.SecuredAction(WithCredentialsProvider("credentials")).async { implicit request =>
       request.body.asJson match {
         case Some(json) =>
           Json.fromJson[UserRole](json) match {
