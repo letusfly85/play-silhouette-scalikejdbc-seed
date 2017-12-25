@@ -3,16 +3,16 @@ package controllers
 import javax.inject.Inject
 
 import com.mohiva.play.silhouette.api.actions.SecuredRequest
-import com.mohiva.play.silhouette.api.{LogoutEvent, Silhouette}
-import entities.{User, UserRole}
-import io.swagger.annotations.{ApiResponse, ApiResponses}
+import com.mohiva.play.silhouette.api.{ LogoutEvent, Silhouette }
+import entities.{ User, UserRole }
+import io.swagger.annotations.{ ApiResponse, ApiResponses }
 import models.Users
 import org.webjars.play.WebJarsUtil
 import play.api.i18n.I18nSupport
-import play.api.libs.json.{JsObject, JsSuccess, Json}
-import play.api.mvc.{AbstractController, AnyContent, ControllerComponents}
-import play.filters.csrf.{CSRFAddToken, CSRFCheck}
-import utils.auth.{DefaultEnv, WithCredentialsProvider}
+import play.api.libs.json.{ JsObject, JsSuccess, Json }
+import play.api.mvc.{ AbstractController, AnyContent, ControllerComponents }
+import play.filters.csrf.{ CSRFAddToken, CSRFCheck }
+import utils.auth.{ DefaultEnv, WithCredentialsProvider }
 
 import scala.concurrent.Future
 
@@ -60,7 +60,7 @@ class AdministratorController @Inject() (
     new ApiResponse(code = 404, message = "Coffee Bean not found")))
   def list() =
     addToken(silhouette.SecuredAction.async { implicit request =>
-      Future.successful(Ok(Json.toJson(Users.findAll.map { users  =>
+      Future.successful(Ok(Json.toJson(Users.findAll.map { users =>
         User(
           users.id, users.email, users.role
         )

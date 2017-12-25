@@ -11,12 +11,12 @@ object User {
     (JsPath \ "id").read[Int] and
     (JsPath \ "email").read[String] and
     (JsPath \ "role").read[String]
-    )(User.apply _)
+  )(User.apply _)
 
   implicit def userEntityWrites: Writes[User] = (
     (JsPath \ "id").write[Int] and
     (JsPath \ "email").write[String] and
     (JsPath \ "role").write[String]
-    )(unlift(User.unapply))
+  )(unlift(User.unapply))
 }
 
