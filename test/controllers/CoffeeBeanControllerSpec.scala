@@ -6,17 +6,16 @@ import com.google.inject.AbstractModule
 import com.mohiva.play.silhouette.api.{ Environment, LoginInfo }
 import com.mohiva.play.silhouette.test._
 import entities.CoffeeBean
-import models.{ CoffeeBeans, User }
+import models.User
 import net.codingwell.scalaguice.ScalaModule
 import org.specs2.mock.Mockito
-import org.specs2.specification.{ BeforeAfter, BeforeAfterAll, Scope }
+import org.specs2.specification.{ BeforeAfterAll, Scope }
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import play.api.test.{ FakeRequest, PlaySpecification, WithApplication }
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import play.api.http.HttpEntity.Strict
 import scalikejdbc._
 import scalikejdbc.config.DBs
 import utils.auth.DefaultEnv
@@ -49,7 +48,7 @@ class CoffeeBeanControllerSpec extends PlaySpecification with Mockito with Befor
   }
 
   "The `update` action" should {
-    "return 200 if coffee beans is updated" in new Context {
+    "update action returns Ok if coffee beans is updated" in new Context {
       new WithApplication(application) {
         val requestBody = CoffeeBean(id = 999, name = Some("guatemala"), kind = Some("latin america"), coffeeShopId = Some(1))
         val Some(future) = route(app, FakeRequest(routes.CoffeeBeanController.update())
@@ -59,6 +58,42 @@ class CoffeeBeanControllerSpec extends PlaySpecification with Mockito with Befor
         val result = Await.result(future.asInstanceOf[Future[Result]], 3.seconds)
 
         result.header.status must beEqualTo(OK)
+      }
+    }
+
+    "update action returns NotFound error if coffee beans is not found" in new Context {
+      new WithApplication(application) {
+        val requestBody = CoffeeBean(id = 998, name = Some("guatemala"), kind = Some("latin america"), coffeeShopId = Some(1))
+        val Some(future) = route(app, FakeRequest(routes.CoffeeBeanController.update())
+          .withAuthenticator[DefaultEnv](identity.loginInfo)
+          .withBody(Json.toJson(requestBody))
+        )
+        val result = Await.result(future.asInstanceOf[Future[Result]], 3.seconds)
+
+        result.header.status must beEqualTo(NOT_FOUND)
+      }
+    }
+
+    "update action returns BadRequest if post parameter is invalid" in new Context {
+      new WithApplication(application) {
+        val Some(future) = route(app, FakeRequest(routes.CoffeeBeanController.update())
+          .withAuthenticator[DefaultEnv](identity.loginInfo)
+          .withBody(Json.obj("name" -> "Guatemara"))
+        )
+        val result = Await.result(future.asInstanceOf[Future[Result]], 3.seconds)
+
+        result.header.status must beEqualTo(BAD_REQUEST)
+      }
+    }
+
+    "update action returns BadRequest if request without json" in new Context {
+      new WithApplication(application) {
+        val Some(future) = route(app, FakeRequest(routes.CoffeeBeanController.update())
+          .withAuthenticator[DefaultEnv](identity.loginInfo)
+        )
+        val result = Await.result(future.asInstanceOf[Future[Result]], 3.seconds)
+
+        result.header.status must beEqualTo(BAD_REQUEST)
       }
     }
   }
