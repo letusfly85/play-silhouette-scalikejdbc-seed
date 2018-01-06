@@ -47,8 +47,46 @@ class CoffeeBeanControllerSpec extends PlaySpecification with Mockito with Befor
     }
   }
 
+  "The `create` action" should {
+    "return Ok if coffee beans is created" in new Context {
+      new WithApplication(application) {
+        val requestBody = CoffeeBean(id = 0, name = Some("Sumatra"), kind = Some("East Asia"), coffeeShopId = Some(1))
+        val Some(future) = route(app, FakeRequest(routes.CoffeeBeanController.create())
+          .withAuthenticator[DefaultEnv](identity.loginInfo)
+          .withBody(Json.toJson(requestBody))
+        )
+        val result = Await.result(future.asInstanceOf[Future[Result]], 3.seconds)
+
+        result.header.status must beEqualTo(CREATED)
+      }
+    }
+
+    "return BadRequest if post parameter is invalid" in new Context {
+      new WithApplication(application) {
+        val Some(future) = route(app, FakeRequest(routes.CoffeeBeanController.create())
+          .withAuthenticator[DefaultEnv](identity.loginInfo)
+          .withBody(Json.obj("name" -> "Guatemara"))
+        )
+        val result = Await.result(future.asInstanceOf[Future[Result]], 3.seconds)
+
+        result.header.status must beEqualTo(BAD_REQUEST)
+      }
+    }
+
+    "return BadRequest if request without json" in new Context {
+      new WithApplication(application) {
+        val Some(future) = route(app, FakeRequest(routes.CoffeeBeanController.create())
+          .withAuthenticator[DefaultEnv](identity.loginInfo)
+        )
+        val result = Await.result(future.asInstanceOf[Future[Result]], 3.seconds)
+
+        result.header.status must beEqualTo(BAD_REQUEST)
+      }
+    }
+  }
+
   "The `update` action" should {
-    "update action returns Ok if coffee beans is updated" in new Context {
+    "return Ok if coffee beans is updated" in new Context {
       new WithApplication(application) {
         val requestBody = CoffeeBean(id = 999, name = Some("guatemala"), kind = Some("latin america"), coffeeShopId = Some(1))
         val Some(future) = route(app, FakeRequest(routes.CoffeeBeanController.update())
@@ -61,7 +99,7 @@ class CoffeeBeanControllerSpec extends PlaySpecification with Mockito with Befor
       }
     }
 
-    "update action returns NotFound error if coffee beans is not found" in new Context {
+    "return NotFound error if coffee beans is not found" in new Context {
       new WithApplication(application) {
         val requestBody = CoffeeBean(id = 998, name = Some("guatemala"), kind = Some("latin america"), coffeeShopId = Some(1))
         val Some(future) = route(app, FakeRequest(routes.CoffeeBeanController.update())
@@ -74,7 +112,7 @@ class CoffeeBeanControllerSpec extends PlaySpecification with Mockito with Befor
       }
     }
 
-    "update action returns BadRequest if post parameter is invalid" in new Context {
+    "return BadRequest if post parameter is invalid" in new Context {
       new WithApplication(application) {
         val Some(future) = route(app, FakeRequest(routes.CoffeeBeanController.update())
           .withAuthenticator[DefaultEnv](identity.loginInfo)
@@ -86,7 +124,7 @@ class CoffeeBeanControllerSpec extends PlaySpecification with Mockito with Befor
       }
     }
 
-    "update action returns BadRequest if request without json" in new Context {
+    "return BadRequest if request without json" in new Context {
       new WithApplication(application) {
         val Some(future) = route(app, FakeRequest(routes.CoffeeBeanController.update())
           .withAuthenticator[DefaultEnv](identity.loginInfo)

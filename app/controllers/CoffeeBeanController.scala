@@ -41,7 +41,7 @@ class CoffeeBeanController @Inject() (
     new ApiResponse(code = 400, message = "Invalid ID supplied"),
     new ApiResponse(code = 404, message = "Coffee Bean not found")))
   def list() =
-    addToken(silhouette.SecuredAction.async { implicit request =>
+    checkToken(silhouette.SecuredAction.async { implicit request =>
       val coffeeShopId = request.queryString.get("coffee-shop-id").headOption match {
         case Some(values) => values.head
         case None         => ""
@@ -59,7 +59,7 @@ class CoffeeBeanController @Inject() (
     new ApiResponse(code = 400, message = "Invalid ID supplied"),
     new ApiResponse(code = 404, message = "Coffee Bean not found")))
   def find(@ApiParam(value = "ID of the Coffee Bean to fetch") id: String) =
-    silhouette.SecuredAction { implicit request =>
+    checkToken(silhouette.SecuredAction { implicit request =>
       CoffeeBeans.find(id.toInt) match {
         case Some(coffeeBeans) =>
           Ok(Json.toJson(
@@ -69,9 +69,8 @@ class CoffeeBeanController @Inject() (
         case _ =>
           NotFound(JsObject.empty)
       }
-    }
+    })
 
-  DBs.setupAll()
   @ApiResponses(Array())
   def update =
     checkToken(silhouette.SecuredAction.async { implicit request =>
@@ -112,17 +111,14 @@ class CoffeeBeanController @Inject() (
                 coffeeShopId = coffeeBeans.coffeeShopId
               ).save()
 
-              Future.successful(Ok(Json.toJson(coffeeBeans)))
+              Future.successful(Created(Json.toJson(coffeeBeans)))
 
-            case e =>
-              //TODO
-              println(e.toString)
-              Future.successful(Ok(JsObject.empty))
+            case JsError(e) =>
+              Future.successful(BadRequest(Json.obj("error_message" -> JsError.toJson(e).toString())))
           }
 
         case None =>
-          //TODO
-          Future.successful(Ok(JsObject.empty))
+          Future.successful(BadRequest(Json.obj("error_message" -> "not found json")))
       }
     })
 
