@@ -25,5 +25,5 @@ script:
   - find $HOME/.ivy2 -name "ivydata-*.properties" | xargs rm
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN
 
