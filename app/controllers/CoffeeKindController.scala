@@ -8,7 +8,7 @@ import io.swagger.annotations.{Api, ApiParam, ApiResponse, ApiResponses}
 import models.CoffeeKinds
 import org.webjars.play.WebJarsUtil
 import play.api.i18n.I18nSupport
-import play.api.libs.json.{JsObject, JsSuccess, Json}
+import play.api.libs.json._
 import play.api.mvc.{AbstractController, ControllerComponents}
 import play.filters.csrf.{CSRFAddToken, CSRFCheck}
 import utils.auth.DefaultEnv
@@ -73,22 +73,18 @@ class CoffeeKindController @Inject()(
                   beans.copy(
                     name = coffeeBeans.name, description = coffeeBeans.description
                   ).save()
+                  Future.successful(Ok(Json.toJson(coffeeBeans)))
 
                 case None =>
-                  Future.successful(Ok(Json.toJson(coffeeBeans)))
+                  Future.successful(NotFound(Json.obj("error_message" -> s"${coffeeBeans.toString} not found")))
               }
 
-              Future.successful(Ok(Json.toJson(coffeeBeans)))
-
-            case e =>
-              //TODO
-              println(e.toString)
-              Future.successful(Ok(JsObject.empty))
+            case JsError(e) =>
+              Future.successful(BadRequest(Json.obj("error_message" -> JsError.toJson(e).toString())))
           }
 
         case None =>
-          //TODO
-          Future.successful(Ok(JsObject.empty))
+          Future.successful(BadRequest(Json.obj("error_message" -> "not found json")))
       }
     })
 
