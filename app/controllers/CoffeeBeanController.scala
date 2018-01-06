@@ -10,9 +10,10 @@ import org.webjars.play.WebJarsUtil
 import play.api.i18n.I18nSupport
 import play.api.mvc.{AbstractController, ControllerComponents}
 import play.filters.csrf.{CSRFAddToken, CSRFCheck}
-import play.api.libs.json.{JsObject, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsObject, JsSuccess, Json}
 import utils.auth.DefaultEnv
 import scalikejdbc._
+import scalikejdbc.config.DBs
 
 import scala.concurrent.Future
 
@@ -70,6 +71,7 @@ class CoffeeBeanController @Inject() (
       }
     }
 
+  DBs.setupAll()
   @ApiResponses(Array())
   def update =
     checkToken(silhouette.SecuredAction.async { implicit request =>
@@ -82,22 +84,18 @@ class CoffeeBeanController @Inject() (
                   beans.copy(
                     name = coffeeBeans.name, kind = coffeeBeans.kind, coffeeShopId = coffeeBeans.coffeeShopId
                   ).save()
+                  Future.successful(Ok(Json.toJson(coffeeBeans)))
 
                 case None =>
-                  Future.successful(Ok(Json.toJson(coffeeBeans)))
+                  Future.successful(NotFound(Json.obj("error_message" -> s"${coffeeBeans.toString} not found")))
               }
 
-              Future.successful(Ok(Json.toJson(coffeeBeans)))
-
-            case e =>
-              //TODO
-              println(e.toString)
-              Future.successful(Ok(JsObject.empty))
+            case JsError(e) =>
+              Future.successful(BadRequest(Json.obj("error_message" -> JsError.toJson(e).toString())))
           }
 
         case None =>
-          //TODO
-          Future.successful(Ok(JsObject.empty))
+          Future.successful(BadRequest(Json.obj("error_message" -> "not found json")))
       }
     })
 
