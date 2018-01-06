@@ -20,6 +20,7 @@ before_script:
 
 script:
   - sbt coverage test
+  - sbt coverageReport
   - find $HOME/.sbt -name "*.lock" | xargs rm
   - find $HOME/.ivy2 -name "ivydata-*.properties" | xargs rm
 
