@@ -136,6 +136,32 @@ class CoffeeBeanControllerSpec extends PlaySpecification with Mockito with Befor
     }
   }
 
+  "The `destroy` action" should {
+    "return Ok if coffee beans is destroyed" in new Context {
+      new WithApplication(application) {
+        val destroyId = "234"
+        val Some(future) = route(app, FakeRequest(routes.CoffeeBeanController.destroy(destroyId))
+          .withAuthenticator[DefaultEnv](identity.loginInfo)
+        )
+        val result = Await.result(future.asInstanceOf[Future[Result]], 3.seconds)
+
+        result.header.status must beEqualTo(OK)
+      }
+    }
+
+    "return NotFound if coffee beans is not found" in new Context {
+      new WithApplication(application) {
+        val destroyId = "235"
+        val Some(future) = route(app, FakeRequest(routes.CoffeeBeanController.destroy(destroyId))
+          .withAuthenticator[DefaultEnv](identity.loginInfo)
+        )
+        val result = Await.result(future.asInstanceOf[Future[Result]], 3.seconds)
+
+        result.header.status must beEqualTo(NOT_FOUND)
+      }
+    }
+  }
+
   /**
    * The context.
    */
