@@ -1,6 +1,6 @@
 name := "play-silhouette-scalikejdbc-js"
 
-organization := "com.letusfly85"
+organization := "io.wonder-soft"
 
 version := "1.0.0-SNAPSHOT"
 
@@ -13,7 +13,7 @@ resolvers += Resolver.jcenterRepo
 resolvers += "Sonatype snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 
 libraryDependencies ++= {
-  val silhouetteVersion = "5.0.2"
+  val silhouetteVersion = "5.0.3"
   val scalikeJDBCV = "3.0.2"
   Seq(
     guice,
@@ -49,10 +49,10 @@ libraryDependencies ++= {
     "com.typesafe.play" %% "play-mailer-guice" % "6.0.1",
     "com.enragedginger" %% "akka-quartz-scheduler" % "1.6.1-akka-2.5.x",
 
-    // swagger depdencies
+    // swagger dependencies
     "io.swagger" %% "swagger-play2" % "1.6.1-SNAPSHOT",
 
-    //"org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test,
+    // specification dependencies
     "com.typesafe.play" %% "play-specs2" % "2.6.7" % Test,
     "org.specs2" %% "specs2" % "2.5" % Test
   )
