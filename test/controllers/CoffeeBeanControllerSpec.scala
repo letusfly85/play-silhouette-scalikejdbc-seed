@@ -19,7 +19,6 @@ import scalikejdbc._
 import scalikejdbc.config.DBs
 import utils.auth.DefaultEnv
 
-
 /**
  * Test case for the [[controllers.ApplicationController]] class.
  */
@@ -54,6 +53,18 @@ class CoffeeBeanControllerSpec extends PlaySpecification with Mockito with Befor
         status(future) must beEqualTo(OK)
         val resultData = contentAsJson(future).as[List[CoffeeBean]]
         resultData.nonEmpty must beTrue
+      }
+    }
+
+    "return Ok if no parameter passed" in new Context {
+      new WithApplication(application) {
+        val Some(future) = route(app, FakeRequest(GET, s"${routes.CoffeeBeanController.list().path()}")
+          .withAuthenticator[DefaultEnv](identity.loginInfo)
+        )
+
+        status(future) must beEqualTo(OK)
+        val resultData = contentAsJson(future).as[List[CoffeeBean]]
+        resultData.isEmpty must beTrue
       }
     }
 

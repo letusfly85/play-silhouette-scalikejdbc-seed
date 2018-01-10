@@ -44,6 +44,18 @@ class ApplicationControllerSpec extends PlaySpecification with Mockito {
     }
   }
 
+  "The `signOut` action" should {
+    "return 200 if user sign out" in new Context {
+      new WithApplication(application) {
+        val Some(result) = route(app, FakeRequest(routes.ApplicationController.signOut())
+          .withAuthenticator[DefaultEnv](identity.loginInfo)
+        )
+
+        status(result) must beEqualTo(OK)
+      }
+    }
+  }
+
   /**
    * The context.
    */
