@@ -6,13 +6,12 @@ import com.google.inject.AbstractModule
 import com.mohiva.play.silhouette.api.{ Environment, LoginInfo }
 import com.mohiva.play.silhouette.test._
 import entities.CoffeeBean
-import models.{ CoffeeBeans, User }
+import models.User
 import net.codingwell.scalaguice.ScalaModule
 import org.specs2.mock.Mockito
 import org.specs2.specification.{ BeforeAfterAll, Scope }
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
-import play.api.mvc.Result
 import play.api.test.{ FakeRequest, PlaySpecification, WithApplication }
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -20,8 +19,6 @@ import scalikejdbc._
 import scalikejdbc.config.DBs
 import utils.auth.DefaultEnv
 
-import scala.concurrent.duration._
-import scala.concurrent.{ Await, Future }
 
 /**
  * Test case for the [[controllers.ApplicationController]] class.
@@ -53,12 +50,10 @@ class CoffeeBeanControllerSpec extends PlaySpecification with Mockito with Befor
         val Some(future) = route(app, FakeRequest(GET, s"${routes.CoffeeBeanController.list().path()}?coffee-shop-id=1")
           .withAuthenticator[DefaultEnv](identity.loginInfo)
         )
-        val result = Await.result(future.asInstanceOf[Future[Result]], 3.seconds)
 
-        result.header.status must beEqualTo(OK)
-
-        val expectedResults = CoffeeBeans.findAll()
-        expectedResults.nonEmpty must beEqualTo(true)
+        status(future) must beEqualTo(OK)
+        val resultData = contentAsJson(future).as[List[CoffeeBean]]
+        resultData.nonEmpty must beTrue
       }
     }
 
@@ -67,12 +62,12 @@ class CoffeeBeanControllerSpec extends PlaySpecification with Mockito with Befor
         val Some(future) = route(app, FakeRequest(GET, s"${routes.CoffeeBeanController.list().path()}?coffee-shop-id=9999")
           .withAuthenticator[DefaultEnv](identity.loginInfo)
         )
-        val result = Await.result(future.asInstanceOf[Future[Result]], 3.seconds)
+        //val result = Await.result(future.asInstanceOf[Future[Result]], 3.seconds)
+        //result.header.status must beEqualTo(OK)
 
-        result.header.status must beEqualTo(OK)
-
-        val expectedResults = CoffeeBeans.findAll()
-        expectedResults.isEmpty must beEqualTo(true)
+        status(future) must beEqualTo(OK)
+        val resultData = contentAsJson(future).as[List[CoffeeBean]]
+        resultData.isEmpty must beTrue
       }
     }
   }
@@ -84,9 +79,10 @@ class CoffeeBeanControllerSpec extends PlaySpecification with Mockito with Befor
         val Some(future) = route(app, FakeRequest(routes.CoffeeBeanController.find(coffeeBeanId))
           .withAuthenticator[DefaultEnv](identity.loginInfo)
         )
-        val result = Await.result(future.asInstanceOf[Future[Result]], 3.seconds)
 
-        result.header.status must beEqualTo(OK)
+        status(future) must beEqualTo(OK)
+        val resultData = contentAsJson(future).as[CoffeeBean]
+        resultData.id must beEqualTo(coffeeBeanId.toInt)
       }
     }
 
@@ -96,9 +92,8 @@ class CoffeeBeanControllerSpec extends PlaySpecification with Mockito with Befor
         val Some(future) = route(app, FakeRequest(routes.CoffeeBeanController.find(coffeeBeanId))
           .withAuthenticator[DefaultEnv](identity.loginInfo)
         )
-        val result = Await.result(future.asInstanceOf[Future[Result]], 3.seconds)
 
-        result.header.status must beEqualTo(NOT_FOUND)
+        status(future) must beEqualTo(NOT_FOUND)
       }
     }
   }
@@ -111,9 +106,10 @@ class CoffeeBeanControllerSpec extends PlaySpecification with Mockito with Befor
           .withAuthenticator[DefaultEnv](identity.loginInfo)
           .withBody(Json.toJson(requestBody))
         )
-        val result = Await.result(future.asInstanceOf[Future[Result]], 3.seconds)
 
-        result.header.status must beEqualTo(CREATED)
+        status(future) must beEqualTo(CREATED)
+        val resultData = contentAsJson(future).as[CoffeeBean]
+        resultData.name must beEqualTo(Some("Sumatra"))
       }
     }
 
@@ -123,9 +119,8 @@ class CoffeeBeanControllerSpec extends PlaySpecification with Mockito with Befor
           .withAuthenticator[DefaultEnv](identity.loginInfo)
           .withBody(Json.obj("name" -> "Guatemara"))
         )
-        val result = Await.result(future.asInstanceOf[Future[Result]], 3.seconds)
 
-        result.header.status must beEqualTo(BAD_REQUEST)
+        status(future) must beEqualTo(BAD_REQUEST)
       }
     }
 
@@ -134,9 +129,8 @@ class CoffeeBeanControllerSpec extends PlaySpecification with Mockito with Befor
         val Some(future) = route(app, FakeRequest(routes.CoffeeBeanController.create())
           .withAuthenticator[DefaultEnv](identity.loginInfo)
         )
-        val result = Await.result(future.asInstanceOf[Future[Result]], 3.seconds)
 
-        result.header.status must beEqualTo(BAD_REQUEST)
+        status(future) must beEqualTo(BAD_REQUEST)
       }
     }
   }
@@ -149,9 +143,8 @@ class CoffeeBeanControllerSpec extends PlaySpecification with Mockito with Befor
           .withAuthenticator[DefaultEnv](identity.loginInfo)
           .withBody(Json.toJson(requestBody))
         )
-        val result = Await.result(future.asInstanceOf[Future[Result]], 3.seconds)
 
-        result.header.status must beEqualTo(OK)
+        status(future) must beEqualTo(OK)
       }
     }
 
@@ -162,9 +155,8 @@ class CoffeeBeanControllerSpec extends PlaySpecification with Mockito with Befor
           .withAuthenticator[DefaultEnv](identity.loginInfo)
           .withBody(Json.toJson(requestBody))
         )
-        val result = Await.result(future.asInstanceOf[Future[Result]], 3.seconds)
 
-        result.header.status must beEqualTo(NOT_FOUND)
+        status(future) must beEqualTo(NOT_FOUND)
       }
     }
 
@@ -174,9 +166,8 @@ class CoffeeBeanControllerSpec extends PlaySpecification with Mockito with Befor
           .withAuthenticator[DefaultEnv](identity.loginInfo)
           .withBody(Json.obj("name" -> "Guatemara"))
         )
-        val result = Await.result(future.asInstanceOf[Future[Result]], 3.seconds)
 
-        result.header.status must beEqualTo(BAD_REQUEST)
+        status(future) must beEqualTo(BAD_REQUEST)
       }
     }
 
@@ -185,9 +176,8 @@ class CoffeeBeanControllerSpec extends PlaySpecification with Mockito with Befor
         val Some(future) = route(app, FakeRequest(routes.CoffeeBeanController.update())
           .withAuthenticator[DefaultEnv](identity.loginInfo)
         )
-        val result = Await.result(future.asInstanceOf[Future[Result]], 3.seconds)
 
-        result.header.status must beEqualTo(BAD_REQUEST)
+        status(future) must beEqualTo(BAD_REQUEST)
       }
     }
   }
@@ -199,9 +189,8 @@ class CoffeeBeanControllerSpec extends PlaySpecification with Mockito with Befor
         val Some(future) = route(app, FakeRequest(routes.CoffeeBeanController.destroy(destroyId))
           .withAuthenticator[DefaultEnv](identity.loginInfo)
         )
-        val result = Await.result(future.asInstanceOf[Future[Result]], 3.seconds)
 
-        result.header.status must beEqualTo(OK)
+        status(future) must beEqualTo(OK)
       }
     }
 
@@ -211,9 +200,8 @@ class CoffeeBeanControllerSpec extends PlaySpecification with Mockito with Befor
         val Some(future) = route(app, FakeRequest(routes.CoffeeBeanController.destroy(destroyId))
           .withAuthenticator[DefaultEnv](identity.loginInfo)
         )
-        val result = Await.result(future.asInstanceOf[Future[Result]], 3.seconds)
 
-        result.header.status must beEqualTo(NOT_FOUND)
+        status(future) must beEqualTo(NOT_FOUND)
       }
     }
   }
