@@ -47,8 +47,47 @@ class CoffeeBeanControllerSpec extends PlaySpecification with Mockito with Befor
     }
   }
 
+  "The `list` action" should {
+    "return Ok if coffee beans found" in new Context {
+      new WithApplication(application) {
+        val Some(future) = route(app, FakeRequest(routes.CoffeeBeanController.list())
+          .withAuthenticator[DefaultEnv](identity.loginInfo)
+        )
+        val result = Await.result(future.asInstanceOf[Future[Result]], 3.seconds)
+
+        result.header.status must beEqualTo(OK)
+      }
+    }
+  }
+
+  "The `find` action" should {
+    "return Ok if a coffee bean found" in new Context {
+      new WithApplication(application) {
+        val coffeeBeanId = "999"
+        val Some(future) = route(app, FakeRequest(routes.CoffeeBeanController.find(coffeeBeanId))
+          .withAuthenticator[DefaultEnv](identity.loginInfo)
+        )
+        val result = Await.result(future.asInstanceOf[Future[Result]], 3.seconds)
+
+        result.header.status must beEqualTo(OK)
+      }
+    }
+
+    "return NotFound if a coffee bean not found" in new Context {
+      new WithApplication(application) {
+        val coffeeBeanId = "1001"
+        val Some(future) = route(app, FakeRequest(routes.CoffeeBeanController.find(coffeeBeanId))
+          .withAuthenticator[DefaultEnv](identity.loginInfo)
+        )
+        val result = Await.result(future.asInstanceOf[Future[Result]], 3.seconds)
+
+        result.header.status must beEqualTo(NOT_FOUND)
+      }
+    }
+  }
+
   "The `create` action" should {
-    "return Ok if coffee beans is created" in new Context {
+    "return Created if coffee beans is created" in new Context {
       new WithApplication(application) {
         val requestBody = CoffeeBean(id = 0, name = Some("Sumatra"), kind = Some("East Asia"), coffeeShopId = Some(1))
         val Some(future) = route(app, FakeRequest(routes.CoffeeBeanController.create())

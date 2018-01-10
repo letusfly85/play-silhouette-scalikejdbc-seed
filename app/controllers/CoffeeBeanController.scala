@@ -13,7 +13,6 @@ import play.filters.csrf.{CSRFAddToken, CSRFCheck}
 import play.api.libs.json.{JsError, JsObject, JsSuccess, Json}
 import utils.auth.DefaultEnv
 import scalikejdbc._
-import scalikejdbc.config.DBs
 
 import scala.concurrent.Future
 
