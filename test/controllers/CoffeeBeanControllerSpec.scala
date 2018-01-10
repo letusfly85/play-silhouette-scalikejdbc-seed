@@ -6,7 +6,7 @@ import com.google.inject.AbstractModule
 import com.mohiva.play.silhouette.api.{ Environment, LoginInfo }
 import com.mohiva.play.silhouette.test._
 import entities.CoffeeBean
-import models.User
+import models.{ CoffeeBeans, User }
 import net.codingwell.scalaguice.ScalaModule
 import org.specs2.mock.Mockito
 import org.specs2.specification.{ BeforeAfterAll, Scope }
@@ -50,12 +50,29 @@ class CoffeeBeanControllerSpec extends PlaySpecification with Mockito with Befor
   "The `list` action" should {
     "return Ok if coffee beans found" in new Context {
       new WithApplication(application) {
-        val Some(future) = route(app, FakeRequest(routes.CoffeeBeanController.list())
+        val Some(future) = route(app, FakeRequest(GET, s"${routes.CoffeeBeanController.list().path()}?coffee-shop-id=1")
           .withAuthenticator[DefaultEnv](identity.loginInfo)
         )
         val result = Await.result(future.asInstanceOf[Future[Result]], 3.seconds)
 
         result.header.status must beEqualTo(OK)
+
+        val expectedResults = CoffeeBeans.findAll()
+        expectedResults.nonEmpty must beEqualTo(true)
+      }
+    }
+
+    "return Ok if coffee beans not found" in new Context {
+      new WithApplication(application) {
+        val Some(future) = route(app, FakeRequest(GET, s"${routes.CoffeeBeanController.list().path()}?coffee-shop-id=9999")
+          .withAuthenticator[DefaultEnv](identity.loginInfo)
+        )
+        val result = Await.result(future.asInstanceOf[Future[Result]], 3.seconds)
+
+        result.header.status must beEqualTo(OK)
+
+        val expectedResults = CoffeeBeans.findAll()
+        expectedResults.isEmpty must beEqualTo(true)
       }
     }
   }
