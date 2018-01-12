@@ -35,20 +35,19 @@ class CoffeeKindController @Inject()(
     assets: AssetsFinder
 ) extends AbstractController(components) with I18nSupport {
 
-  @ApiResponses(Array(
-    new ApiResponse(code = 400, message = "Invalid ID supplied"),
-    new ApiResponse(code = 404, message = "Coffee Bean not found")))
+  @ApiResponses(Array())
   def list() =
-    addToken(silhouette.SecuredAction.async { implicit request =>
+    checkToken(silhouette.SecuredAction.async { implicit request =>
       Future.successful(Ok(Json.toJson(CoffeeKinds.findAll.map{coffeeKinds =>
         CoffeeKind(coffeeKinds.id, coffeeKinds.name, coffeeKinds.description)
       })))
     })
 
+
   @ApiResponses(Array(
     new ApiResponse(code = 400, message = "Invalid ID supplied"),
-    new ApiResponse(code = 404, message = "Coffee Bean not found")))
-  def find(@ApiParam(value = "ID of the Coffee Bean to fetch") id: String) =
+    new ApiResponse(code = 404, message = "Coffee Kind not found")))
+  def find(@ApiParam(value = "ID of the Coffee Kind to fetch") id: String) =
     checkToken(silhouette.SecuredAction.async { implicit request =>
       CoffeeKinds.find(id.toInt) match {
         case Some(coffeeKinds) =>
@@ -112,7 +111,7 @@ class CoffeeKindController @Inject()(
     })
 
   @ApiResponses(Array())
-  def destroy(@ApiParam(value = "ID of the Coffee Bean to fetch") id: String) =
+  def destroy(@ApiParam(value = "ID of the Coffee Kind to fetch") id: String) =
     checkToken(silhouette.SecuredAction.async { implicit request =>
       CoffeeKinds.find(id.toInt) match {
         case Some(coffeeKind) =>

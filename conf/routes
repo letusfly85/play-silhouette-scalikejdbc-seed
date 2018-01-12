@@ -41,6 +41,8 @@ PUT         /api/users                       controllers.AdministratorController
 
 GET         /api/coffee-kinds                controllers.CoffeeKindController.list
 
+GET         /api/coffee-kinds/:id            controllers.CoffeeKindController.find(id)
+
 GET         /api/coffee-beans                controllers.CoffeeBeanController.list
 
 GET         /api/coffee-beans/:id            controllers.CoffeeBeanController.find(id)
