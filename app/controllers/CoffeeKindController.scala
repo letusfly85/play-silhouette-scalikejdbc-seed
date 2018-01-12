@@ -69,8 +69,8 @@ class CoffeeKindController @Inject()(
           Json.fromJson[CoffeeKind](json) match {
             case JsSuccess(coffeeKind, _) =>
               CoffeeKinds.find(coffeeKind.id) match {
-                case Some(coffeeKind) =>
-                  coffeeKind.copy(
+                case Some(kind) =>
+                  kind.copy(
                     name = coffeeKind.name, description = coffeeKind.description
                   ).save()
                   Future.successful(Ok(Json.toJson(coffeeKind)))
