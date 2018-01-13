@@ -43,6 +43,8 @@ GET         /api/coffee-kinds                controllers.CoffeeKindController.li
 
 GET         /api/coffee-kinds/:id            controllers.CoffeeKindController.find(id)
 
+DELETE      /api/coffee-kinds/:id            controllers.CoffeeKindController.destroy(id)
+
 GET         /api/coffee-beans                controllers.CoffeeBeanController.list
 
 GET         /api/coffee-beans/:id            controllers.CoffeeBeanController.find(id)
