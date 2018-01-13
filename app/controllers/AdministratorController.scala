@@ -41,7 +41,7 @@ class AdministratorController @Inject() (
    * @return The result to display.
    */
   def index = silhouette.SecuredAction(WithCredentialsProvider("credentials")).async { implicit request: SecuredRequest[DefaultEnv, AnyContent] =>
-    Future.successful(Ok(views.html.admin(request.identity)))
+    Future.successful(Ok(JsObject.empty))
   }
 
   /**

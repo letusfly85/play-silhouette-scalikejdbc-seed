@@ -56,8 +56,14 @@ class SignInController @Inject() (
    *
    * @return The result to display.
    */
+  /*
   def view = silhouette.UnsecuredAction.async { implicit request: Request[AnyContent] =>
     Future.successful(Ok(views.html.signIn(SignInForm.form, socialProviderRegistry)))
+  }
+  */
+
+  def index = silhouette.UnsecuredAction.async { implicit request: Request[AnyContent] =>
+    Future.successful(Ok(JsObject.empty))
   }
 
   /**
@@ -71,7 +77,7 @@ class SignInController @Inject() (
       data => {
         val credentials = Credentials(data.email, data.password)
         credentialsProvider.authenticate(credentials).flatMap { loginInfo =>
-          val result = Redirect(routes.ApplicationController.index())
+          val result = Redirect(routes.SignInController.index())
           userService.retrieve(loginInfo).flatMap {
             case Some(user) if !user.activated =>
               Future.successful(Ok(JsObject.empty))

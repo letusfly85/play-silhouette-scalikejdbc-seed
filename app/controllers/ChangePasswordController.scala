@@ -11,6 +11,7 @@ import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import forms.ChangePasswordForm
 import org.webjars.play.WebJarsUtil
 import play.api.i18n.{ I18nSupport, Messages }
+import play.api.libs.json.JsObject
 import play.api.mvc.{ AbstractController, AnyContent, ControllerComponents }
 import utils.auth.{ DefaultEnv, WithProvider }
 
@@ -46,10 +47,12 @@ class ChangePasswordController @Inject() (
    *
    * @return The result to display.
    */
+  /*
   def view = silhouette.SecuredAction(WithProvider[DefaultEnv#A](CredentialsProvider.ID)) {
     implicit request: SecuredRequest[DefaultEnv, AnyContent] =>
       Ok(views.html.changePassword(ChangePasswordForm.form, request.identity))
   }
+  */
 
   /**
    * Changes the password.
@@ -59,18 +62,18 @@ class ChangePasswordController @Inject() (
   def submit = silhouette.SecuredAction(WithProvider[DefaultEnv#A](CredentialsProvider.ID)).async {
     implicit request: SecuredRequest[DefaultEnv, AnyContent] =>
       ChangePasswordForm.form.bindFromRequest.fold(
-        form => Future.successful(BadRequest(views.html.changePassword(form, request.identity))),
+        _ => Future.successful(BadRequest(JsObject.empty)),
         password => {
           val (currentPassword, newPassword) = password
           val credentials = Credentials(request.identity.email.getOrElse(""), currentPassword)
           credentialsProvider.authenticate(credentials).flatMap { loginInfo =>
             val passwordInfo = passwordHasherRegistry.current.hash(newPassword)
             authInfoRepository.update[PasswordInfo](loginInfo, passwordInfo).map { _ =>
-              Redirect(routes.ChangePasswordController.view()).flashing("success" -> Messages("password.changed"))
+              Redirect(routes.SignInController.index()).flashing("error" -> Messages("current.password.invalid"))
             }
           }.recover {
             case _: ProviderException =>
-              Redirect(routes.ChangePasswordController.view()).flashing("error" -> Messages("current.password.invalid"))
+              Redirect(routes.SignInController.index()).flashing("error" -> Messages("current.password.invalid"))
           }
         }
       )

@@ -13,6 +13,7 @@ import models.{ User, Users }
 import models.services.{ AuthTokenService, UserService }
 import org.webjars.play.WebJarsUtil
 import play.api.i18n.{ I18nSupport, Messages }
+import play.api.libs.json.JsObject
 import play.api.libs.mailer.{ Email, MailerClient }
 import play.api.mvc.{ AbstractController, AnyContent, ControllerComponents, Request }
 import utils.auth.DefaultEnv
@@ -55,9 +56,11 @@ class SignUpController @Inject() (
    *
    * @return The result to display.
    */
+  /*
   def view = silhouette.UnsecuredAction.async { implicit request: Request[AnyContent] =>
     Future.successful(Ok(views.html.signUp(SignUpForm.form)))
   }
+  */
 
   /**
    * Handles the submitted form.
@@ -66,13 +69,13 @@ class SignUpController @Inject() (
    */
   def submit = silhouette.UnsecuredAction.async { implicit request: Request[AnyContent] =>
     SignUpForm.form.bindFromRequest.fold(
-      form => Future.successful(BadRequest(views.html.signUp(form))),
+      form => Future.successful(BadRequest(JsObject.empty)),
       data => {
-        val result = Redirect(routes.SignUpController.view()).flashing("info" -> Messages("sign.up.email.sent", data.email))
+        val result = Redirect(routes.SignInController.index()).flashing("info" -> Messages("sign.up.email.sent", data.email))
         val loginInfo = LoginInfo(CredentialsProvider.ID, data.email)
         userService.retrieve(loginInfo).flatMap {
           case Some(user) =>
-            val url = routes.SignInController.view().absoluteURL()
+            val url = routes.ApplicationController.index().absoluteURL()
             mailerClient.send(Email(
               subject = Messages("email.already.signed.up.subject"),
               from = Messages("email.from"),

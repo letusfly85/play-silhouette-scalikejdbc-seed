@@ -51,7 +51,7 @@ class SocialAuthController @Inject() (
             authInfo <- authInfoRepository.save(profile.loginInfo, authInfo)
             authenticator <- silhouette.env.authenticatorService.create(profile.loginInfo)
             value <- silhouette.env.authenticatorService.init(authenticator)
-            result <- silhouette.env.authenticatorService.embed(value, Redirect(routes.ApplicationController.index()))
+            result <- silhouette.env.authenticatorService.embed(value, Redirect(routes.SignInController.index()))
           } yield {
             silhouette.env.eventBus.publish(LoginEvent(user, request))
             result
@@ -61,7 +61,7 @@ class SocialAuthController @Inject() (
     }).recover {
       case e: ProviderException =>
         logger.error("Unexpected provider error", e)
-        Redirect(routes.SignInController.view()).flashing("error" -> Messages("could.not.authenticate"))
+        Redirect(routes.SignInController.index()).flashing("error" -> Messages("could.not.authenticate"))
     }
   }
 }

@@ -8,6 +8,7 @@ import forms.ForgotPasswordForm
 import models.services.{ AuthTokenService, UserService }
 import org.webjars.play.WebJarsUtil
 import play.api.i18n.{ I18nSupport, Messages }
+import play.api.libs.json.JsObject
 import play.api.libs.mailer.{ Email, MailerClient }
 import play.api.mvc.{ AbstractController, AnyContent, ControllerComponents, Request }
 import utils.auth.DefaultEnv
@@ -44,9 +45,11 @@ class ForgotPasswordController @Inject() (
    *
    * @return The result to display.
    */
+  /*
   def view = silhouette.UnsecuredAction.async { implicit request: Request[AnyContent] =>
     Future.successful(Ok(views.html.forgotPassword(ForgotPasswordForm.form)))
   }
+  */
 
   /**
    * Sends an email with password reset instructions.
@@ -58,10 +61,10 @@ class ForgotPasswordController @Inject() (
    */
   def submit = silhouette.UnsecuredAction.async { implicit request: Request[AnyContent] =>
     ForgotPasswordForm.form.bindFromRequest.fold(
-      form => Future.successful(BadRequest(views.html.forgotPassword(form))),
+      form => Future.successful(BadRequest(JsObject.empty)),
       email => {
         val loginInfo = LoginInfo(CredentialsProvider.ID, email)
-        val result = Redirect(routes.SignInController.view()).flashing("info" -> Messages("reset.email.sent"))
+        val result = Redirect(routes.SignInController.index()).flashing("info" -> Messages("reset.email.sent"))
         userService.retrieve(loginInfo).flatMap {
           case Some(user) if user.email.isDefined =>
             authTokenService.create(user.userID).map { authToken =>
