@@ -52,24 +52,13 @@ class SignUpController @Inject() (
 ) extends AbstractController(components) with I18nSupport {
 
   /**
-   * Views the `Sign Up` page.
-   *
-   * @return The result to display.
-   */
-  /*
-  def view = silhouette.UnsecuredAction.async { implicit request: Request[AnyContent] =>
-    Future.successful(Ok(views.html.signUp(SignUpForm.form)))
-  }
-  */
-
-  /**
    * Handles the submitted form.
    *
    * @return The result to display.
    */
   def submit = silhouette.UnsecuredAction.async { implicit request: Request[AnyContent] =>
     SignUpForm.form.bindFromRequest.fold(
-      form => Future.successful(BadRequest(JsObject.empty)),
+      _ => Future.successful(BadRequest(JsObject.empty)),
       data => {
         val result = Redirect(routes.SignInController.index()).flashing("info" -> Messages("sign.up.email.sent", data.email))
         val loginInfo = LoginInfo(CredentialsProvider.ID, data.email)
