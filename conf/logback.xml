@@ -3,6 +3,30 @@
 
   <conversionRule conversionWord="coloredLevel" converterClass="play.api.libs.logback.ColoredLevel" />
 
+  <property name="MONITORING_LOG" value="${application.home:-.}/logs/monitoring.log" />
+  <appender name="FILE_MONITORING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${MONITORING_LOG}</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${MONITORING_LOG}.%d.gz</fileNamePattern>
+      <maxHistory>14</maxHistory>
+    </rollingPolicy>
+    <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+      <layout class="ch.qos.logback.contrib.json.classic.JsonLayout">
+        <jsonFormatter class="ch.qos.logback.contrib.jackson.JacksonJsonFormatter">
+          <!-- <prettyPrint>true</prettyPrint> -->
+        </jsonFormatter>
+        <timestampFormat>yyyy-MM-dd'T'HH:mm:ss.SSSXXX</timestampFormat>
+        <includeContextName>false</includeContextName>
+        <appendLineSeparator>true</appendLineSeparator>
+      </layout>
+      <charset>UTF-8</charset>
+    </encoder>
+  </appender>
+
+  <root level="INFO">
+    <appender-ref ref="FILE_MONITORING" />
+  </root>
+
   <appender name="FILE" class="ch.qos.logback.core.FileAppender">
     <file>${application.home:-.}/logs/application.log</file>
     <encoder>
