@@ -130,15 +130,20 @@ scalariformPreferences := scalariformPreferences.value
 //********************************************************
 import com.typesafe.config._
 
+val env = System.getenv("CI") match {
+  case "true" => "test"
+  case _ => "default"
+}
+
 val conf = ConfigFactory.parseFile(new File("conf/database.flyway.conf")).resolve()
 
-flywayDriver := conf.getString("db.default.driver")
+flywayDriver := conf.getString(s"db.${env}.driver")
 
-flywayUrl := conf.getString("db.default.url")
+flywayUrl := conf.getString(s"db.${env}.url")
 
-flywayUser := conf.getString("db.default.username")
+flywayUser := conf.getString(s"db.${env}.username")
 
-flywayPassword := conf.getString("db.default.password")
+flywayPassword := conf.getString(s"db.${env}.password")
 
 flywayLocations := Seq("filesystem:conf/db/migration")
 
