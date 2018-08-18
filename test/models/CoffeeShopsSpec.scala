@@ -12,17 +12,16 @@ class CoffeeShopsSpec extends Specification {
     override def fixture(implicit session: DBSession) {
       SQL("insert into coffee_shops values (?, ?, ?, ?, ?)")
         .bind(
-          123, "Sge Backs", "sge-backs@example.com", "sge john", "somewhere"
+          123, "Sge Backs", "sgebacks@example.com", "sge john", "somewhere"
         ).update.apply()
       SQL("insert into coffee_shops values (?, ?, ?, ?, ?)")
         .bind(
-          234, "Tul is", "tul-is@example.com", "tul sarah", "anywhere"
+          234, "Tul is", "tulis@example.com", "tul sarah", "anywhere"
         ).update.apply()
     }
   }
 
   "CoffeeShops" should {
-
     val cs = CoffeeShops.syntax("cs")
 
     "find by primary keys" in new AutoRollbackWithFixture {

@@ -90,8 +90,8 @@ object CoffeeShops extends SQLSyntaxSupport[CoffeeShops] {
       address = address)
   }
 
-  def batchInsert(entities: Seq[CoffeeShops])(implicit session: DBSession = autoSession): List[Int] = {
-    val params: Seq[Seq[(Symbol, Any)]] = entities.map(entity =>
+  def batchInsert(entities: collection.Seq[CoffeeShops])(implicit session: DBSession = autoSession): List[Int] = {
+    val params: collection.Seq[Seq[(Symbol, Any)]] = entities.map(entity =>
       Seq(
         'name -> entity.name,
         'email -> entity.email,

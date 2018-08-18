@@ -16,7 +16,6 @@ class UsersSpec extends Specification {
   }
 
   "Users" should {
-
     val u = Users.syntax("u")
 
     "find by primary keys" in new AutoRollbackWithFixture {

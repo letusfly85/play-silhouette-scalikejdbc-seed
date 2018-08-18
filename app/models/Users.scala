@@ -120,8 +120,8 @@ object Users extends SQLSyntaxSupport[Users] {
       activated = activated)
   }
 
-  def batchInsert(entities: Seq[Users])(implicit session: DBSession = autoSession): List[Int] = {
-    val params: Seq[Seq[(Symbol, Any)]] = entities.map(entity =>
+  def batchInsert(entities: collection.Seq[Users])(implicit session: DBSession = autoSession): List[Int] = {
+    val params: collection.Seq[Seq[(Symbol, Any)]] = entities.map(entity =>
       Seq(
         'userId -> entity.userId,
         'role -> entity.role,

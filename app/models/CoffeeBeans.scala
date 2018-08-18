@@ -85,8 +85,8 @@ object CoffeeBeans extends SQLSyntaxSupport[CoffeeBeans] {
       coffeeShopId = coffeeShopId)
   }
 
-  def batchInsert(entities: Seq[CoffeeBeans])(implicit session: DBSession = autoSession): List[Int] = {
-    val params: Seq[Seq[(Symbol, Any)]] = entities.map(entity =>
+  def batchInsert(entities: collection.Seq[CoffeeBeans])(implicit session: DBSession = autoSession): List[Int] = {
+    val params: collection.Seq[Seq[(Symbol, Any)]] = entities.map(entity =>
       Seq(
         'name -> entity.name,
         'kind -> entity.kind,

@@ -22,7 +22,6 @@ class CoffeeKindsSpec extends Specification {
   }
 
   "CoffeeKinds" should {
-
     val ck = CoffeeKinds.syntax("ck")
 
     "find by primary keys" in new AutoRollbackWithFixture {
