@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.org/letusfly85/play-silhouette-scalikejdbc-for-js.svg?branch=master)](https://travis-ci.org/letusfly85/play-silhouette-scalikejdbc-for-js)
+[![Build Status](https://travis-ci.org/letusfly85/play-silhouette-scalikejdbc-seed.svg?branch=master)](https://travis-ci.org/letusfly85/play-silhouette-scalikejdbc-seed)
 
-[![codecov](https://codecov.io/gh/letusfly85/play-silhouette-scalikejdbc-for-js/branch/master/graph/badge.svg)](https://codecov.io/gh/letusfly85/play-silhouette-scalikejdbc-for-js)
+[![codecov](https://codecov.io/gh/letusfly85/play-silhouette-scalikejdbc-seed/branch/master/graph/badge.svg)](https://codecov.io/gh/letusfly85/play-silhouette-scalikejdbc-seed)
 
 # PlayFramework silhouette seed project with ScalikeJDBC
 
