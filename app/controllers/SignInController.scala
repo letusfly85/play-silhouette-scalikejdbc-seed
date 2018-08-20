@@ -1,7 +1,6 @@
 package controllers
 
 import javax.inject.Inject
-
 import com.mohiva.play.silhouette.api.Authenticator.Implicits._
 import com.mohiva.play.silhouette.api._
 import com.mohiva.play.silhouette.api.exceptions.ProviderException
@@ -14,7 +13,7 @@ import net.ceedubs.ficus.Ficus._
 import org.webjars.play.WebJarsUtil
 import play.api.Configuration
 import play.api.i18n.{ I18nSupport, Messages }
-import play.api.libs.json.JsObject
+import play.api.libs.json.{ JsObject, JsString }
 import play.api.mvc.{ AbstractController, AnyContent, ControllerComponents, Request }
 import play.filters.csrf.CSRFAddToken
 import utils.auth.DefaultEnv
@@ -77,7 +76,7 @@ class SignInController @Inject() (
       data => {
         val credentials = Credentials(data.email, data.password)
         credentialsProvider.authenticate(credentials).flatMap { loginInfo =>
-          val result = Redirect(routes.SignInController.index())
+          val result = Created(JsObject(Seq("status" -> JsString("success"))))
           userService.retrieve(loginInfo).flatMap {
             case Some(user) if !user.activated =>
               Future.successful(Ok(JsObject.empty))
