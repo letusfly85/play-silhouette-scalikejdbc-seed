@@ -110,10 +110,13 @@ scalacOptions ++= Seq(
   "-Xlint:-unused,_"
 )
 scalacOptions in Test ~= { (options: Seq[String]) =>
+  // Allow dead code in tests (to support using mockito).
   options filterNot (_ == "-Ywarn-dead-code")
 }
-fork in Test := true
-parallelExecution in (Test, test) := false
+javacOptions in Test := Seq("-Xmx512m", "-XX:+UseConcMarkSweepGC", "-XX:+HeapDumpOnOutOfMemory")
+fork in Test := false
+parallelExecution in Test := false
+
 
 //********************************************************
 // Scalariform settings
