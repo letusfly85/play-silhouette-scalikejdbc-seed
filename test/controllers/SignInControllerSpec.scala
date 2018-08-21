@@ -52,7 +52,7 @@ class SignInControllerSpec extends PlaySpecification with BeforeAfterAll {
   override def afterAll = {}
 
   "The `index` action" should {
-    "redirect to login page if user is unauthorized" in new Context {
+    "return CREATED if succeseeded sign in" in new Context {
       new WithApplication(application) {
         val jsonParameter = Map("email" -> "test@dancer-hard.io", "password" -> "hogehoge", "rememberMe" -> "true")
         val Some(result) = route(app, FakeRequest(routes.SignInController.submit())
@@ -60,6 +60,17 @@ class SignInControllerSpec extends PlaySpecification with BeforeAfterAll {
         )
 
         status(result) must be equalTo CREATED
+      }
+    }
+
+    "return FORBIDDEN if failed sign in" in new Context {
+      new WithApplication(application) {
+        val jsonParameter = Map("email" -> "test@dancer-hard.io", "password" -> "wrong password", "rememberMe" -> "true")
+        val Some(result) = route(app, FakeRequest(routes.SignInController.submit())
+          .withJsonBody(Json.toJson(jsonParameter))
+        )
+
+        status(result) must be equalTo FORBIDDEN
       }
     }
   }
