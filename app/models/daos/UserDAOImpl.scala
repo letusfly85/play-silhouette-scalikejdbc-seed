@@ -50,16 +50,7 @@ class UserDAOImpl extends UserDAO {
  */
 object UserDAOImpl {
 
-  /**
-   * The list of users.
-   */
-  val users: mutable.HashMap[UUID, User] = findAll()
-
-  def findAll(): mutable.HashMap[UUID, User] = {
-    val modelUsers = Users.findAll()
-
-    convertSilhouetteUser(modelUsers)
-  }
+  lazy val users: mutable.HashMap[UUID, User] = convertSilhouetteUser(Users.findAll())
 
   def convertSilhouetteUser(modelUsers: List[Users]): mutable.HashMap[UUID, User] = {
     val silhouetteUsers = modelUsers.map { user =>

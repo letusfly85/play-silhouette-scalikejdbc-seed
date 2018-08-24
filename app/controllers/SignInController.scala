@@ -50,17 +50,6 @@ class SignInController @Inject() (
     ex: ExecutionContext
 ) extends AbstractController(components) with I18nSupport {
 
-  /**
-   * Views the `Sign In` page.
-   *
-   * @return The result to display.
-   */
-  /*
-  def view = silhouette.UnsecuredAction.async { implicit request: Request[AnyContent] =>
-    Future.successful(Ok(views.html.signIn(SignInForm.form, socialProviderRegistry)))
-  }
-  */
-
   def index = silhouette.UnsecuredAction.async { implicit request: Request[AnyContent] =>
     Future.successful(Ok(JsObject.empty))
   }
