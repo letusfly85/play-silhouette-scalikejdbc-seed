@@ -29,12 +29,12 @@ libraryDependencies ++= {
   val jacksonV = "2.8.9" // 2.9.3 not working with logback-json dependencies
   Seq(
     guice,
-    ehcache,
     ws,
     specs2 % Test,
 
     //Redis
-    play.sbt.PlayImport.cacheApi,
+    // ehcache,
+    cacheApi,
     "com.github.karelcemus" %% "play-redis" % "2.2.0",
 
     //silhouette dependencies
