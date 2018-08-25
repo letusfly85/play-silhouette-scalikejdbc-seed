@@ -18,6 +18,8 @@ resolvers += "Akka Snapshot Repository" at "http://repo.akka.io/snapshots/"
 
 resolvers += "Atlassian Releases" at "https://maven.atlassian.com/public/"
 
+updateOptions := updateOptions.value.withLatestSnapshots(false)
+
 libraryDependencies ++= {
   val silhouetteVersion = "5.0.5"
   val spec2V = "4.3.3"
