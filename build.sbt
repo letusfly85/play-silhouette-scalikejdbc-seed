@@ -31,6 +31,10 @@ libraryDependencies ++= {
     ws,
     specs2 % Test,
 
+    //Redis
+    play.sbt.PlayImport.cacheApi,
+    "com.github.karelcemus" %% "play-redis" % "2.2.0",
+
     //silhouette dependencies
     "com.mohiva" %% "play-silhouette" % silhouetteVersion,
     "com.mohiva" %% "play-silhouette-password-bcrypt" % silhouetteVersion,
