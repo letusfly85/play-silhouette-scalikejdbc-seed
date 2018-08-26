@@ -16,11 +16,6 @@ import scala.concurrent.duration.Duration
  */
 class CacheAuthenticatorRepositoryImpl @Inject() (cacheLayer: CacheLayer)(implicit ec: ExecutionContext)
   extends AuthenticatorRepository[CookieAuthenticator] {
-
-  Logger.info("initialized")
-  Logger.info(cacheLayer.getClass.getName)
-  Logger.info("initialized")
-
   /**
    * Finds the authenticator for the given ID.
    *
