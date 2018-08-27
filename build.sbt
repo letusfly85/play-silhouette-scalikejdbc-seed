@@ -60,6 +60,7 @@ libraryDependencies ++= {
     "org.scalikejdbc" %% "scalikejdbc-play-initializer"    % "2.6.0-scalikejdbc-3.3",
     "org.scalikejdbc" %% "scalikejdbc-test" % scalikeJDBCV % Test,
     "mysql" % "mysql-connector-java" % "5.1.46",
+    "org.skinny-framework" %% "skinny-orm"  % "3.0.0",
 
     "com.iheart" %% "ficus" % "1.4.1",
     "com.typesafe.play" %% "play-mailer" % "6.0.1",
