@@ -52,6 +52,10 @@ class ApplicationController @Inject() (
     Future.successful(Ok(result))
   })
 
+  def healthCheck = Action { implicit request =>
+    Ok(JsObject(Seq("status" -> JsString("healthy"))))
+  }
+
   /**
    * Handles the Sign Out action.
    *
