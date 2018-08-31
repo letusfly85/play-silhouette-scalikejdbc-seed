@@ -5,7 +5,7 @@ import java.util.UUID
 import com.google.inject.AbstractModule
 import com.mohiva.play.silhouette.api.{ Environment, LoginInfo }
 import com.mohiva.play.silhouette.test._
-import models.{ User, Users }
+import models.{ AuthUser, Users }
 import net.codingwell.scalaguice.ScalaModule
 import org.specs2.specification.{ BeforeAfterAll, Scope }
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -92,7 +92,7 @@ class SignInControllerSpec extends PlaySpecification with BeforeAfterAll {
     /**
      * An identity.
      */
-    val identity = User(
+    val identity = AuthUser(
       userID = UUID.randomUUID(),
       loginInfo = LoginInfo("facebook", "user@facebook.com"),
       role = "normal",

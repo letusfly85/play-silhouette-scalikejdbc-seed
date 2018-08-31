@@ -17,8 +17,6 @@ case class CoffeeShops(
 
 object CoffeeShops extends SQLSyntaxSupport[CoffeeShops] {
 
-  override val schemaName = Some("example")
-
   override val tableName = "coffee_shops"
 
   override val columns = Seq("id", "name", "email", "owner_name", "address")

@@ -5,7 +5,7 @@ import java.util.UUID
 import com.google.inject.AbstractModule
 import com.mohiva.play.silhouette.api.{ Environment, LoginInfo }
 import com.mohiva.play.silhouette.test._
-import models.User
+import models.AuthUser
 import net.codingwell.scalaguice.ScalaModule
 import org.specs2.mock.Mockito
 import org.specs2.specification.Scope
@@ -73,7 +73,7 @@ class ApplicationControllerSpec extends PlaySpecification with Mockito {
     /**
      * An identity.
      */
-    val identity = User(
+    val identity = AuthUser(
       userID = UUID.randomUUID(),
       loginInfo = LoginInfo("facebook", "user@facebook.com"),
       role = "normal",

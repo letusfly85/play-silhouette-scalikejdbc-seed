@@ -20,6 +20,7 @@ resolvers += "Atlassian Releases" at "https://maven.atlassian.com/public/"
 
 updateOptions := updateOptions.value.withLatestSnapshots(false)
 
+lazy val skinnyVersion = "3.0.0"
 libraryDependencies ++= {
   val silhouetteVersion = "5.0.5"
   val spec2V = "4.3.3"
@@ -60,7 +61,7 @@ libraryDependencies ++= {
     "org.scalikejdbc" %% "scalikejdbc-play-initializer"    % "2.6.0-scalikejdbc-3.3",
     "org.scalikejdbc" %% "scalikejdbc-test" % scalikeJDBCV % Test,
     "mysql" % "mysql-connector-java" % "5.1.46",
-    "org.skinny-framework" %% "skinny-orm"  % "3.0.0",
+    "org.skinny-framework" %% "skinny-orm"  % skinnyVersion,
 
     "com.iheart" %% "ficus" % "1.4.1",
     "com.typesafe.play" %% "play-mailer" % "6.0.1",
@@ -191,5 +192,15 @@ assemblyMergeStrategy in assembly := {
     val oldStrategy = (assemblyMergeStrategy in assembly).value
     oldStrategy(x)
 }
+
+lazy val task = (project in file("task")).settings(
+  scalaSource in Compile := baseDirectory.value,
+  libraryDependencies ++= Seq(
+    "org.skinny-framework" %% "skinny-task" % skinnyVersion,
+    "org.skinny-framework" %% "skinny-orm"  % skinnyVersion,
+    "mysql" % "mysql-connector-java" % "5.1.46",
+  ),
+  mainClass := Some("TaskRunner")
+)
 
 logLevel := Level.Info

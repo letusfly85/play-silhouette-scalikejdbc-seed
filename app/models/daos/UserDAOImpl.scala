@@ -3,7 +3,7 @@ package models.daos
 import java.util.UUID
 
 import com.mohiva.play.silhouette.api.LoginInfo
-import models.{ User, Users }
+import models.{ AuthUser, Users }
 import models.daos.UserDAOImpl._
 
 import scala.collection.mutable
@@ -39,7 +39,7 @@ class UserDAOImpl extends UserDAO {
    * @param user The user to save.
    * @return The saved user.
    */
-  def save(user: User) = {
+  def save(user: AuthUser) = {
     users += (user.userID -> user)
     Future.successful(user)
   }
@@ -50,14 +50,14 @@ class UserDAOImpl extends UserDAO {
  */
 object UserDAOImpl {
 
-  lazy val users: mutable.HashMap[UUID, User] = convertSilhouetteUser(Users.findAll())
+  lazy val users: mutable.HashMap[UUID, AuthUser] = convertSilhouetteUser(Users.findAll())
 
-  def convertSilhouetteUser(modelUsers: List[Users]): mutable.HashMap[UUID, User] = {
+  def convertSilhouetteUser(modelUsers: List[Users]): mutable.HashMap[UUID, AuthUser] = {
     val silhouetteUsers = modelUsers.map { user =>
       val uuid = java.util.UUID.fromString(user.userId)
       val loginInfo = LoginInfo(providerID = "credentials", providerKey = user.email)
 
-      new User(
+      new AuthUser(
         userID = uuid,
         loginInfo = loginInfo,
         role = user.role,
@@ -70,7 +70,7 @@ object UserDAOImpl {
       )
     }
 
-    val userMap: mutable.HashMap[UUID, User] = mutable.HashMap[UUID, User]()
+    val userMap: mutable.HashMap[UUID, AuthUser] = mutable.HashMap[UUID, AuthUser]()
     silhouetteUsers.map(su => userMap.put(su.userID, su))
     userMap
   }

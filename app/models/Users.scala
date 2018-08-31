@@ -23,8 +23,6 @@ case class Users(
 
 object Users extends SQLSyntaxSupport[Users] {
 
-  override val schemaName = Some("example")
-
   override val tableName = "users"
 
   override val columns = Seq("id", "user_id", "role", "hasher", "salt", "password", "first_name", "last_name", "email", "avatar_url", "activated")
