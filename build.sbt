@@ -6,7 +6,7 @@ version := "1.0.0-SNAPSHOT"
 
 lazy val root =  (project in file(".")).enablePlugins(PlayScala, ScalikejdbcPlugin, FlywayPlugin)
 
-scalaVersion := "2.12.6"
+scalaVersion := "2.12.7"
 
 resolvers += Resolver.jcenterRepo
 
@@ -24,7 +24,7 @@ lazy val skinnyVersion = "3.0.0"
 libraryDependencies ++= {
   val silhouetteVersion = "5.0.5"
   val spec2V = "4.3.3"
-  val scalikeJDBCV = "3.3.0"
+  val scalikeJDBCV = "3.3.1"
   val logbackV = "1.2.3"
   val logbackJsonV = "0.1.5"
   val jacksonV = "2.8.9" // 2.9.3 not working with logback-json dependencies
