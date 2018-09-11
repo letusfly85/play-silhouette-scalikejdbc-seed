@@ -5,7 +5,7 @@ import java.util.UUID
 import com.google.inject.AbstractModule
 import com.mohiva.play.silhouette.api.{ Environment, LoginInfo }
 import com.mohiva.play.silhouette.test._
-import models.AuthUser
+import models.User
 import net.codingwell.scalaguice.ScalaModule
 import org.specs2.mock.Mockito
 import org.specs2.specification.{ BeforeAfterAll, Scope }
@@ -123,7 +123,7 @@ class CoffeeKindControllerSpec extends PlaySpecification with Mockito with Befor
     /**
      * An identity.
      */
-    val identity = AuthUser(
+    val identity = User(
       userID = UUID.randomUUID(),
       loginInfo = LoginInfo("facebook", "user@facebook.com"),
       role = "normal",

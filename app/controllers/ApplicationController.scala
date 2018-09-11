@@ -3,7 +3,6 @@ package controllers
 import javax.inject.Inject
 import com.mohiva.play.silhouette.api.actions.SecuredRequest
 import com.mohiva.play.silhouette.api.{ LogoutEvent, Silhouette }
-import models.{ User, Users }
 import org.webjars.play.WebJarsUtil
 import play.api.i18n._
 import play.api.libs.json.{ JsObject, JsString }
@@ -53,14 +52,6 @@ class ApplicationController @Inject() (
   })
 
   def healthCheck = Action { implicit request =>
-    /**
-      * example usage of skinny
-      */
-    import scalikejdbc._
-    val users = User.findAll()
-    users.foreach(u => println(u.id))
-    println(User.findById(128).get.email)
-
     Ok(JsObject(Seq("status" -> JsString("healthy"))))
   }
 

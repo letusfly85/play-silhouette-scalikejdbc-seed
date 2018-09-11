@@ -1,32 +1,43 @@
 package models
 
-import skinny.orm._, feature._
-import scalikejdbc._
-import org.joda.time._
+import java.util.UUID
 
+import com.mohiva.play.silhouette.api.{ Identity, LoginInfo }
+
+/**
+ * The user object.
+ *
+ * @param userID The unique ID of the user.
+ * @param loginInfo The linked login info.
+ * @param firstName Maybe the first name of the authenticated user.
+ * @param lastName Maybe the last name of the authenticated user.
+ * @param fullName Maybe the full name of the authenticated user.
+ * @param email Maybe the email of the authenticated provider.
+ * @param avatarURL Maybe the avatar URL of the authenticated provider.
+ * @param activated Indicates that the user has activated its registration.
+ */
 case class User(
-    id: Int,
-    userId: String,
+    userID: UUID,
+    loginInfo: LoginInfo,
     role: String,
-    hasher: String,
-    salt: Option[String] = None,
-    password: String,
-    firstName: Option[String] = None,
-    lastName: Option[String] = None,
-    email: String,
-    avatarUrl: Option[String] = None,
-    activated: Option[Boolean] = None
-)
+    firstName: Option[String],
+    lastName: Option[String],
+    fullName: Option[String],
+    email: Option[String],
+    avatarURL: Option[String],
+    activated: Boolean) extends Identity {
 
-object User extends SkinnyCRUDMapperWithId[Int, User] {
-  override lazy val tableName = "users"
-  override lazy val defaultAlias = createAlias("u")
-  override def idToRawValue(id: Int): Any = id
-  override def rawValueToId(value: Any): Int = value.asInstanceOf[Int]
-  override def useExternalIdGenerator = true
-  // override def generateId = 0
-
-  override def extract(rs: WrappedResultSet, rn: ResultName[User]): User = {
-    autoConstruct(rs, rn)
+  /**
+   * Tries to construct a name.
+   *
+   * @return Maybe a name.
+   */
+  def name = fullName.orElse {
+    firstName -> lastName match {
+      case (Some(f), Some(l)) => Some(f + " " + l)
+      case (Some(f), None)    => Some(f)
+      case (None, Some(l))    => Some(l)
+      case _                  => None
+    }
   }
 }
