@@ -6,7 +6,7 @@ version := "1.0.0-SNAPSHOT"
 
 lazy val root =  (project in file(".")).enablePlugins(PlayScala, ScalikejdbcPlugin, FlywayPlugin)
 
-scalaVersion := "2.12.7"
+scalaVersion := "2.12.6"
 
 resolvers += Resolver.jcenterRepo
 
