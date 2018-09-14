@@ -34,7 +34,6 @@ libraryDependencies ++= {
     specs2 % Test,
 
     //Redis
-    // ehcache,
     cacheApi,
     "com.github.karelcemus" %% "play-redis" % "2.2.0",
 
