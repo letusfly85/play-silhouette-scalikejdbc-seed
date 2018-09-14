@@ -1,6 +1,6 @@
 package models.daos
 
-import com.mohiva.play.silhouette.api.{ AuthInfo, LoginInfo }
+import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.util.PasswordInfo
 import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
 import models.Users
@@ -13,13 +13,16 @@ class AuthInfoDao extends DelegableAuthInfoDAO[PasswordInfo] {
   import scala.concurrent.ExecutionContext.Implicits.global
 
   DBs.setupAll()
-  def loadMap = {
-    var map = new mutable.HashMap[LoginInfo, PasswordInfo]()
-    Users.findAll().map { user =>
-      map.put(LoginInfo("credentials", user.email), PasswordInfo(hasher = user.hasher, password = user.password, salt = user.salt))
-    }
 
-    map
+  private def loadMap = {
+    Users.findAll().foldLeft(mutable.HashMap.empty[LoginInfo, PasswordInfo]) { (acc, user) =>
+      acc.put(
+        LoginInfo("credentials", user.email),
+        PasswordInfo(hasher = user.hasher, password = user.password, salt = user.salt)
+      )
+
+      acc
+    }
   }
 
   var data: mutable.HashMap[LoginInfo, PasswordInfo] = loadMap
