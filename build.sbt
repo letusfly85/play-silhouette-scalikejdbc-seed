@@ -4,7 +4,7 @@ organization := "io.wonder.soft"
 
 version := "1.0.0-SNAPSHOT"
 
-lazy val root =  (project in file(".")).enablePlugins(PlayScala, ScalikejdbcPlugin, FlywayPlugin)
+lazy val root =  (project in file(".")).enablePlugins(PlayScala, ScalikejdbcPlugin)
 
 scalaVersion := "2.12.7"
 
@@ -134,32 +134,6 @@ scalariformPreferences := scalariformPreferences.value
   .setPreference(AlignSingleLineCaseStatements, true)
   .setPreference(DoubleIndentConstructorArguments, true)
   .setPreference(DanglingCloseParenthesis, Preserve)
-
-//********************************************************
-// FlyWay settings
-//********************************************************
-import com.typesafe.config._
-
-val env = System.getenv("CI") match {
-  case "true" => "test"
-  case _ => "default"
-}
-
-val conf = ConfigFactory.parseFile(new File("conf/database.flyway.conf")).resolve()
-
-flywayDriver := conf.getString(s"db.${env}.driver")
-
-flywayUrl := conf.getString(s"db.${env}.url")
-
-flywayUser := conf.getString(s"db.${env}.username")
-
-flywayPassword := conf.getString(s"db.${env}.password")
-
-flywayLocations := Seq("filesystem:conf/db/migration")
-
-flywayTarget := conf.getString("migration.target.version")
-
-flywayBaselineVersion := "0.0.0"
 
 //********************************************************
 // assembly settings
