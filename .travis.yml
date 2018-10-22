@@ -17,8 +17,10 @@ before_install:
 before_script:
   - cat /dev/null | sbt clean test:compile
   - cp conf/application.test.conf conf/application.conf
+  - cp conf/db/conf/flyway.test.conf conf/db/conf/flyway.conf
 
 script:
+  - bash scripts/db-migrate.sh "CI"
   - sbt coverage test coverageReport
   - find $HOME/.sbt -name "*.lock" | xargs rm
   - find $HOME/.ivy2 -name "ivydata-*.properties" | xargs rm
